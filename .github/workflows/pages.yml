@@ -25,6 +25,8 @@ jobs:
         run: |
           if [ ! -f data/meta.json ]; then python3 build.py --demo; fi
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .
