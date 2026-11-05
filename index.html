@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hospital &amp; Doctor Referral Directory</title>
+  <meta name="description" content="Where every U.S. hospital and doctor sends patients: nursing homes, home health agencies, hospices, rehab hospitals and specialists, with patient counts, shares and ranks. Free, no login.">
+  <meta name="theme-color" content="#0b2545">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230b2545'/%3E%3Cpath d='M8 17h10l-3-3m3 3-3 3' stroke='%23d4a017' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='23' cy='17' r='3' fill='%23d4a017'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // Point dataBase at a CDN or bucket if you host the /data folder separately.
+    window.DIRECTORY_CONFIG = { dataBase: 'data' };
+  </script>
+</head>
+<body>
+  <a class="skip" href="#app">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#/">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-text"><strong>Referral Directory</strong><small>Hospitals · Doctors · Post-acute care</small></span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false">☰</button>
+      <nav class="site-nav" id="siteNav">
+        <a href="#/" data-nav="home">Home</a>
+        <a href="#/hospitals" data-nav="hospitals">Hospitals</a>
+        <a href="#/doctors" data-nav="doctors">Doctors</a>
+        <a href="#/facilities" data-nav="facilities">Facilities</a>
+        <a href="#/flows" data-nav="flows">Flows</a>
+        <a href="#/trending" data-nav="trending">Trending</a>
+        <a href="#/about" data-nav="about">About</a>
+      </nav>
+      <form class="header-search" id="headerSearch" role="search">
+        <input type="search" name="q" placeholder="Name, city, ZIP or NPI" aria-label="Search providers" autocomplete="off">
+        <button type="submit" aria-label="Search">⌕</button>
+      </form>
+    </div>
+  </header>
+
+  <div id="banner" class="wrap"></div>
+  <main id="app" class="wrap" aria-live="polite"></main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div id="footerData" class="footer-data"></div>
+      <p>Free to browse, no login. Built from public CMS and NPPES data. Patient counts are Medicare fee-for-service beneficiaries shared between two providers; they are not a measure of quality. See <a href="#/about">About</a> for sources, dates and limitations.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+# build.py scratch space (multi-GB downloads and temp shards)
+cache/
+work/
+*.part
+__pycache__/
+.DS_Store

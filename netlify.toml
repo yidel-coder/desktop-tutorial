@@ -1,0 +1,22 @@
+[build]
+  publish = "."
+  # Data is pre-built by build.py and committed (or uploaded with `netlify deploy`), so no build command.
+  command = ""
+
+# Serve pre-compressed data files with the right type; the browser decompresses them in app.js.
+[[headers]]
+  for = "/data/*.gz"
+  [headers.values]
+    Content-Type = "application/gzip"
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/data/*.json"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
