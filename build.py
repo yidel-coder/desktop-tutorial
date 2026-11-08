@@ -486,12 +486,15 @@ def load_facilities(cat: CmsCatalog, states_filter) -> tuple[dict, dict]:
     sources = [("hospital_enroll", "H"), ("snf_enroll", "S"), ("hha_enroll", "A"), ("hospice_enroll", "C")]
     for key, code in sources:
         log(f"Loading {CMS_DATASETS[key][0]} ...")
+        seen_here = set()
         for r in cat.rows(key):
             npi = re.sub(r"\D", "", pick(r, "NPI"))
             if len(npi) != 10:
                 continue
+            if int(npi) in providers and int(npi) not in seen_here:
+                continue  # e.g. a hospital-based SNF unit billing under the hospital's NPI: keep the hospital
             state = pick(r, "STATE", "PRACTICE_LOCATION_STATE", "ENROLLMENT_STATE").upper()[:2]
-            if states_filter and state not in states_filter:
+            if state not in STATES or (states_filter and state not in states_filter):
                 continue
             ccn = pick(r, "CCN", "PROVIDER_ID", "MEDICARE_ID")
             name = clean_name(pick(r, "DOING_BUSINESS_AS_NAME") or pick(r, "ORGANIZATION_NAME", "PROVIDER_NAME"))
@@ -505,6 +508,7 @@ def load_facilities(cat: CmsCatalog, states_filter) -> tuple[dict, dict]:
                          clean_name(pick(r, "ADDRESS_LINE_1", "ADDRESS")), clean_name(pick(r, "CITY")),
                          state, zip5(pick(r, "ZIP_CODE", "ZIP")))
             providers[p.npi] = p
+            seen_here.add(p.npi)
     # Additional NPIs for the same enrollment -> alias to the primary NPI
     enroll_to_primary = {}
     for key in ("hospital_enroll", "snf_enroll", "hha_enroll", "hospice_enroll"):
@@ -608,7 +612,7 @@ def load_doctors(dl: Downloader, keep_npis: set, providers: dict, tax: dict, sta
                 if i_deact is not None and row[i_deact]:
                     continue
                 state = (row[i_state] or "").upper()[:2]
-                if states_filter and state not in states_filter:
+                if state not in STATES or (states_filter and state not in states_filter):
                     continue
                 primary, first_code = None, None
                 for ci, si in tax_cols:
@@ -895,6 +899,22 @@ def flow_row(p: Provider, n: int, total: int):
     return [p.npi, p.type, p.name, p.city, p.state, p.specialty, n, share]
 
 
+def select_top(partners: dict, providers: dict, args):
+    """Top `args.top` partners overall plus the top `args.top_per_type` of every partner type, by patients."""
+    ranked = sorted(partners.items(), key=lambda kv: -kv[1])
+    keep = ranked[:args.top]
+    if len(ranked) > args.top:
+        chosen = {b for b, _ in keep}
+        per_type = collections.Counter(providers[b].type for b, _ in keep)
+        for b, n in ranked[args.top:]:
+            t = providers[b].type
+            if per_type[t] < args.top_per_type:
+                per_type[t] += 1
+                chosen.add(b)
+        keep = [(b, n) for b, n in ranked if b in chosen]
+    return keep
+
+
 def write_provider_shards(providers: dict, agg: dict, args, out_dir: str):
     log("Writing provider shards ...")
     shards = args.shards
@@ -917,8 +937,8 @@ def write_provider_shards(providers: dict, agg: dict, args, out_dir: str):
             p = providers[npi]
             o = outs.get(npi, {})
             i = ins.get(npi, {})
-            o_rows = [flow_row(providers[b], n, out_tot[npi]) for b, n in sorted(o.items(), key=lambda kv: -kv[1])[:args.top]]
-            i_rows = [flow_row(providers[a], n, in_tot[npi]) for a, n in sorted(i.items(), key=lambda kv: -kv[1])[:args.top]]
+            o_rows = [flow_row(providers[b], n, out_tot[npi]) for b, n in select_top(o, providers, args)]
+            i_rows = [flow_row(providers[a], n, in_tot[npi]) for a, n in select_top(i, providers, args)]
             payload[str(npi)] = {
                 "p": p.profile(),
                 "t": [out_tot[npi], in_tot[npi], agg["out_partners"][npi], agg["in_partners"][npi]],
@@ -1046,6 +1066,7 @@ def write_meta(providers: dict, agg: dict, states, args, out_dir: str, extra: di
         "min_patients": args.min_patients,
         "dd_min": args.dd_min,
         "top": args.top,
+        "top_per_type": args.top_per_type,
         "growth_min": args.growth_min,
         "shards": args.shards,
         "demo": bool(args.demo),
@@ -1226,6 +1247,7 @@ def parse_args(argv=None):
     ap.add_argument("--dd-min", type=int, default=40, help="doctor->doctor pairs need this many patients to enter state flow tables")
     ap.add_argument("--growth-min", type=int, default=30, help="minimum current-year patients for growth analysis")
     ap.add_argument("--top", type=int, default=100, help="destinations/sources kept per provider page (default 100)")
+    ap.add_argument("--top-per-type", type=int, default=50, help="partners kept per type on top of --top (default 50)")
     ap.add_argument("--top-lists", type=int, default=50, help="length of trending lists (default 50)")
     ap.add_argument("--flows-cap", type=int, default=150000, help="max rows per state flow table")
     ap.add_argument("--shards", type=int, default=1000, help="number of provider shard files (default 1000)")

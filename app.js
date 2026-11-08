@@ -340,7 +340,7 @@
         <p class="muted" style="margin:0 0 12px">${d === 'out'
           ? `Providers that treated this ${isDoctor ? "doctor's" : "facility's"} Medicare patients within ${META.window_days} days afterwards. Share = percent of all ${fmt(total)} patients sent onward.`
           : `Providers whose Medicare patients came to ${esc(name)} within ${META.window_days} days. Share = percent of all ${fmt(total)} patients received.`}
-          ${rows.length >= META.top ? ` Showing the top ${META.top} relationships.` : ''}</p>
+          ${rows.length >= META.top ? ` Showing the top ${META.top} relationships overall plus the top ${META.top_per_type || 50} of each type.` : ''}</p>
         ${types.length ? `<h3>By ${d === 'out' ? 'destination' : 'source'} type</h3><div class="share-list">${types.map((t) => `<div class="share-row"><div>${badge(t)}</div><div class="track"><span style="width:${(100 * byType[t] / Math.max(total, 1)).toFixed(1)}%;background:${TYPE_COLOR[t]}"></span></div><div class="n">${fmt(byType[t])} · ${pct(100 * byType[t] / Math.max(total, 1))}</div></div>`).join('')}
           ${total > listed ? `<div class="share-row"><div class="muted">Other (not listed)</div><div class="track"><span style="width:${(100 * (total - listed) / total).toFixed(1)}%;background:#c5ccd6"></span></div><div class="n">${fmt(total - listed)} · ${pct(100 * (total - listed) / total)}</div></div>` : ''}</div>` : ''}
         <div class="chips" style="margin-top:14px"><button class="chip ${!typeFilter ? 'active' : ''}" data-t="">All types</button>${types.map((t) => `<button class="chip ${typeFilter === t ? 'active' : ''}" data-t="${t}">${TYPE_PLURAL[t]}</button>`).join('')}</div>
@@ -545,6 +545,7 @@
       app.innerHTML = `<div class="error"><b>No data found.</b> Run <code>python build.py --demo</code> (or a full build) to create the <code>data/</code> folder, then serve this directory with a web server. (${esc(err.message)})</div>`;
       return;
     }
+    META.states = (META.states || []).slice().sort((a, b) => a.name.localeCompare(b.name));
     document.getElementById('footerData').textContent = `Referral data: ${META.flows_label}. Built ${META.built}.`;
     if (META.demo) document.getElementById('banner').innerHTML = '<div class="banner"><b>Demo data.</b> Every name and number on this copy of the site is synthetic. Run <code>python build.py</code> to build it from real CMS data.</div>';
     window.addEventListener('hashchange', route);
