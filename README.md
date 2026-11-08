@@ -12,7 +12,7 @@ cleans it and writes compressed JSON per state into `/data`. No server, no datab
 index.html   style.css   app.js        the site (vanilla JS, no dependencies)
 build.py                               downloads + joins public data, writes /data
 data/                                  output of build.py (a demo build is committed)
-netlify.toml  .github/workflows/pages.yml   deployment
+netlify.toml  _headers  deploy_netlify.py  .github/workflows/pages.yml   deployment
 ```
 
 ## Pages
@@ -152,6 +152,14 @@ netlify deploy --prod --dir .      # uploads index.html, style.css, app.js and d
 
 Or connect the GitHub repo in the Netlify UI with publish directory `.` and an empty build command. Multi-GB deploys
 work but are slow the first time; later deploys only upload changed files.
+
+Without Node or the CLI, `deploy_netlify.py` does the same through the Netlify API (it creates the site if needed and
+only uploads files whose contents changed):
+
+```bash
+export NETLIFY_AUTH_TOKEN=...          # app.netlify.com > User settings > Applications > Personal access tokens
+python deploy_netlify.py --site my-referral-directory
+```
 
 **GitHub Pages (fine for the demo or a few states).** `.github/workflows/pages.yml` deploys the repo root on every
 push to `main` (it runs `build.py --demo` if `data/` is missing). In the repo settings choose *Pages → Source:

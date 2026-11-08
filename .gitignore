@@ -4,3 +4,4 @@ work/
 *.part
 __pycache__/
 .DS_Store
+data_full/

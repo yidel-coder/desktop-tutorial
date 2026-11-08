@@ -448,7 +448,7 @@
           ${(t.pairs[sel] || []).map((p, i) => pairRow(p, `${fmt(p.patients)}<span class="sub">${pct(p.share)} of source · #${i + 1}</span>`)).join('')}`;
         panel.querySelector('[data-f]').addEventListener('change', (e) => { q.pair = e.target.value; history.replaceState(null, '', '#/trending' + qs({ tab, pair: q.pair })); draw(); });
       } else if (tab === 'growth') {
-        panel.innerHTML = `<p class="muted">Relationships involving at least one facility that grew the most from ${esc(META.prior_year)} to ${esc(META.year)} (minimum ${META.growth_min || 30} patients in ${esc(META.year)}).</p>
+        panel.innerHTML = `<p class="muted">Relationships involving at least one facility that grew the most from ${esc(META.prior_year)} to ${esc(META.year)} (minimum ${META.growth_min || 30} patients in ${esc(META.year)}).${META.prior_note ? ' ' + esc(META.prior_note) : ''}</p>
           ${t.growth.map((p) => pairRow(p, `${fmt(p.patients)}<span class="sub"><span class="up">▲ ${fmt(p.change)}</span> (+${pct(p.pct)}) from ${fmt(p.prior)}</span>`)).join('')}`;
       } else if (tab === 'new') {
         panel.innerHTML = `<p class="muted">Largest relationships in ${esc(META.year)} that did not exist (fewer than ${META.min_patients} shared patients) in ${esc(META.prior_year)}.</p>
@@ -478,7 +478,7 @@
         </ul>
         <h2>Dates</h2>
         <ul>
-          <li>Pair data year: <b>${esc(META.year)}</b>${META.prior_year ? ` (growth compared with ${esc(META.prior_year)})` : ''}. CMS's newest public release of the Physician Shared Patient Patterns is 2015; the 2015 file covers claims from January through about September 2015.</li>
+          <li>Pair data year: <b>${esc(META.year)}</b>${META.prior_year ? ` (growth compared with ${esc(META.prior_year)})` : ''}.${META.prior_note ? ' ' + esc(META.prior_note) : ''} CMS's newest public release of the Physician Shared Patient Patterns is 2015; the 2015 file covers claims from January through about September 2015.</li>
           <li>Provider names, addresses and ratings: current enrollment and Care Compare files at build time.</li>
           <li>Site data built: <b>${esc(META.built)}</b>.</li>
         </ul>
