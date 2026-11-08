@@ -1,0 +1,9 @@
+# Netlify / Cloudflare Pages header rules (same as netlify.toml; this file is honored by API deploys too)
+/data/*.gz
+  Content-Type: application/gzip
+  Cache-Control: public, max-age=86400
+/data/*.json
+  Cache-Control: public, max-age=3600
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin

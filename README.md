@@ -12,7 +12,7 @@ cleans it and writes compressed JSON per state into `/data`. No server, no datab
 index.html   style.css   app.js        the site (vanilla JS, no dependencies)
 build.py                               downloads + joins public data, writes /data
 data/                                  output of build.py (a demo build is committed)
-netlify.toml  .github/workflows/pages.yml   deployment
+netlify.toml  _headers  deploy_netlify.py  .github/workflows/pages.yml   deployment
 ```
 
 ## Pages
@@ -153,10 +153,27 @@ netlify deploy --prod --dir .      # uploads index.html, style.css, app.js and d
 Or connect the GitHub repo in the Netlify UI with publish directory `.` and an empty build command. Multi-GB deploys
 work but are slow the first time; later deploys only upload changed files.
 
-**GitHub Pages (fine for the demo or a few states).** `.github/workflows/pages.yml` deploys the repo root on every
-push to `main` (it runs `build.py --demo` if `data/` is missing). In the repo settings choose *Pages → Source:
-GitHub Actions*. GitHub limits a repo to about 1 GB, so for a full national build host `data/` elsewhere (next
-option).
+Without Node or the CLI, `deploy_netlify.py` does the same through the Netlify API (it creates the site if needed and
+only uploads files whose contents changed):
+
+```bash
+export NETLIFY_AUTH_TOKEN=...          # app.netlify.com > User settings > Applications > Personal access tokens
+python deploy_netlify.py --site my-referral-directory
+```
+
+**GitHub Pages (what this repo is set up for).** `.github/workflows/pages.yml` deploys the repo root on every push
+to `main`. `main` carries only the small demo `data/`; the real national dataset (about 810 MB) lives on the orphan
+`data` branch, and the workflow swaps it in at deploy time, so the repository history never grows with rebuilds.
+In the repo settings choose *Pages → Source: GitHub Actions* once. To publish a new build:
+
+```bash
+python build.py --prior-year 2014                       # writes data/
+git worktree add /tmp/dataw --detach && cd /tmp/dataw
+git checkout --orphan data && git rm -rfq . && cp -r ../desktop-tutorial/data/. . && git add -A
+git commit -m "National referral data, built $(date +%F)" && git push --force -u origin data
+```
+
+Then re-run the Pages workflow (push to `main` or use *Run workflow*). GitHub Pages sites are limited to 1 GB.
 
 **Site on Pages/Netlify, data on object storage (best for a full national build).** Upload `data/` to Cloudflare R2,
 Backblaze B2 or S3 behind a CDN, allow CORS `GET` from your site's origin, serve `.gz` files as

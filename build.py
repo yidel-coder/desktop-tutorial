@@ -99,7 +99,11 @@ CMS_DATASETS = {
     "snf_npis": ("Skilled Nursing Facility Additional NPIs", None),
     "hha_npis": ("Home Health Agency Additional NPIs", None),
     "hospice_npis": ("Hospice Additional NPIs", None),
-    "pac": ("Medicare Post-Acute Care and Hospice - by Provider and Service", None),
+    "pac_snf": ("Medicare Post-Acute Care Utilization - Skilled Nursing Facility by Geography and Provider", None),
+    "pac_hos": ("Medicare Post-Acute Care Utilization - Hospice by Geography and Provider", None),
+    "pac_hh": ("Medicare Post-Acute Care Utilization - Home Health Agency by Geography and Provider", None),
+    "pac_irf": ("Medicare Post-Acute Care Utilization - Inpatient Rehabilitation Facility by Geography and Provider", None),
+    "pac_ltc": ("Medicare Post-Acute Care Utilization - Long-Term Care Hospital by Geography and Provider", None),
     "taxonomy": ("Medicare Provider and Supplier Taxonomy Crosswalk", None),
 }
 
@@ -325,18 +329,24 @@ class CmsCatalog:
                     log(f"   could not parse data.json: {e}")
         return self._catalog
 
+    @staticmethod
+    def _family(title) -> str:
+        return (title or "").split(" : ")[0].strip().lower()
+
+    @staticmethod
+    def _snapshot_key(d):
+        m = re.search(r":\s*(\d{4}(?:-\d{2}-\d{2})?)\s*$", d.get("title", ""))
+        return (m.group(1) if m else "", d.get("modified", ""))
+
     def find(self, title: str):
+        """data.cms.gov lists every monthly snapshot as 'Title : YYYY-MM-DD'; return the newest one."""
         t = title.lower()
-        exact = [d for d in self.catalog() if (d.get("title") or "").strip().lower() == t]
-        if exact:
-            return exact[0]
-        loose = [d for d in self.catalog() if t in (d.get("title") or "").lower()]
-        if loose:
-            # Prefer the undated "latest" dataset; otherwise newest modified
-            loose.sort(key=lambda d: (":" in d.get("title", ""), d.get("modified", "")), reverse=False)
-            undated = [d for d in loose if ":" not in d.get("title", "")]
-            return undated[0] if undated else sorted(loose, key=lambda d: d.get("modified", ""))[-1]
-        return None
+        fam = [d for d in self.catalog() if self._family(d.get("title")) == t]
+        if not fam:
+            fam = [d for d in self.catalog() if t in self._family(d.get("title"))]
+        if not fam:
+            return None
+        return max(fam, key=self._snapshot_key)
 
     def rows(self, key: str, required: bool = True):
         """Return list[dict] rows for a CMS dataset (CSV preferred, API fallback)."""
@@ -451,11 +461,14 @@ PROFILE_COLS = ["npi", "type", "name", "city", "state", "zip", "specialty", "ccn
 
 def hospital_subtype(row: dict, ccn: str) -> str:
     """Classify a hospital enrollment row as H (acute/general), R (rehab) or L (LTCH)."""
-    for k, v in row.items():
-        if "REHAB" in k and str(v).upper().startswith("Y"):
-            return "R"
-        if "LONG_TERM" in k and str(v).upper().startswith("Y"):
-            return "L"
+    def flag(*names):
+        return any(str(row.get(n, "")).upper().startswith("Y") for n in names)
+    if flag("SUBGROUP_GENERAL", "SUBGROUP_ACUTE_CARE", "SUBGROUP_SHORT_TERM"):
+        return "H"
+    if flag("SUBGROUP_REHABILITATION"):
+        return "R"
+    if flag("SUBGROUP_LONG_TERM"):
+        return "L"
     tail = re.sub(r"\D", "", ccn or "")[-4:]
     if tail.isdigit():
         n = int(tail)
@@ -473,22 +486,29 @@ def load_facilities(cat: CmsCatalog, states_filter) -> tuple[dict, dict]:
     sources = [("hospital_enroll", "H"), ("snf_enroll", "S"), ("hha_enroll", "A"), ("hospice_enroll", "C")]
     for key, code in sources:
         log(f"Loading {CMS_DATASETS[key][0]} ...")
+        seen_here = set()
         for r in cat.rows(key):
             npi = re.sub(r"\D", "", pick(r, "NPI"))
             if len(npi) != 10:
                 continue
+            if int(npi) in providers and int(npi) not in seen_here:
+                continue  # e.g. a hospital-based SNF unit billing under the hospital's NPI: keep the hospital
             state = pick(r, "STATE", "PRACTICE_LOCATION_STATE", "ENROLLMENT_STATE").upper()[:2]
-            if states_filter and state not in states_filter:
+            if state not in STATES or (states_filter and state not in states_filter):
                 continue
             ccn = pick(r, "CCN", "PROVIDER_ID", "MEDICARE_ID")
             name = clean_name(pick(r, "DOING_BUSINESS_AS_NAME") or pick(r, "ORGANIZATION_NAME", "PROVIDER_NAME"))
             if not name:
                 continue
+            loc = pick(r, "PRACTICE_LOCATION_TYPE").upper()
+            if int(npi) in providers and loc and "MAIN" not in loc and "PRIMARY" not in loc:
+                continue  # keep the main location already recorded
             t = hospital_subtype(r, ccn) if code == "H" else code
             p = Provider(int(npi), ccn, name, t,
                          clean_name(pick(r, "ADDRESS_LINE_1", "ADDRESS")), clean_name(pick(r, "CITY")),
                          state, zip5(pick(r, "ZIP_CODE", "ZIP")))
             providers[p.npi] = p
+            seen_here.add(p.npi)
     # Additional NPIs for the same enrollment -> alias to the primary NPI
     enroll_to_primary = {}
     for key in ("hospital_enroll", "snf_enroll", "hha_enroll", "hospice_enroll"):
@@ -537,7 +557,7 @@ def specialty_for(code: str, tax: dict) -> str:
 
 def nppes_zip_url(dl: Downloader) -> str:
     page = dl.fetch_text(NPPES_INDEX, "NPI_Files.html")
-    m = re.findall(r'href="\.?/?(NPPES_Data_Dissemination_[A-Za-z]+_\d{4}\.zip)"', page)
+    m = re.findall(r'href=[\'"]\.?/?(NPPES_Data_Dissemination_[A-Za-z]+_\d{4}(?:_V\d+)?\.zip)[\'"]', page)
     if not m:
         raise RuntimeError("Could not find the NPPES monthly file link on " + NPPES_INDEX)
     # The first full-replacement file is the current month
@@ -592,7 +612,7 @@ def load_doctors(dl: Downloader, keep_npis: set, providers: dict, tax: dict, sta
                 if i_deact is not None and row[i_deact]:
                     continue
                 state = (row[i_state] or "").upper()[:2]
-                if states_filter and state not in states_filter:
+                if state not in STATES or (states_filter and state not in states_filter):
                     continue
                 primary, first_code = None, None
                 for ci, si in tax_cols:
@@ -625,18 +645,20 @@ def attach_volume_context(cat: CmsCatalog, dl: Downloader, providers: dict) -> d
     for p in providers.values():
         if p.type != "D" and p.ccn:
             by_ccn[re.sub(r"\D", "", p.ccn).zfill(6)].append(p)
-    # PAC utilization
-    try:
-        rows = cat.rows("pac", required=False)
-    except Exception as e:  # noqa: BLE001
-        rows, _ = [], log(f"   PAC utilization skipped: {e}")
+    # PAC utilization (one file per setting; rows are NATION / STATE / PROVIDER level)
+    rows = []
+    for key in ("pac_snf", "pac_hos", "pac_hh", "pac_irf", "pac_ltc"):
+        try:
+            rows.extend(cat.rows(key, required=False))
+        except Exception as e:  # noqa: BLE001
+            log(f"   {key} skipped: {e}")
     joined = 0
     years = collections.Counter()
     for r in rows:
-        srv = pick(r, "SRVC_CTGRY", "SERVICE_CATEGORY").upper()
-        if srv and srv not in ("ALL", "ALL SERVICES", "TOTAL"):
-            continue
-        ccn = re.sub(r"\D", "", pick(r, "PRVDR_ID", "PROVIDER_ID", "CCN")).zfill(6)
+        ccn_raw = pick(r, "PRVDR_ID", "PROVIDER_ID", "CCN")
+        if not re.fullmatch(r"[0-9A-Za-z]{6}", ccn_raw or ""):
+            continue  # NATIONAL TOTAL / STATE TOTAL rows
+        ccn = re.sub(r"\D", "", ccn_raw).zfill(6)
         if ccn not in by_ccn:
             continue
         year = pick(r, "YEAR", "RFRNC_YR", "PERIOD")
@@ -877,6 +899,22 @@ def flow_row(p: Provider, n: int, total: int):
     return [p.npi, p.type, p.name, p.city, p.state, p.specialty, n, share]
 
 
+def select_top(partners: dict, providers: dict, args):
+    """Top `args.top` partners overall plus the top `args.top_per_type` of every partner type, by patients."""
+    ranked = sorted(partners.items(), key=lambda kv: -kv[1])
+    keep = ranked[:args.top]
+    if len(ranked) > args.top:
+        chosen = {b for b, _ in keep}
+        per_type = collections.Counter(providers[b].type for b, _ in keep)
+        for b, n in ranked[args.top:]:
+            t = providers[b].type
+            if per_type[t] < args.top_per_type:
+                per_type[t] += 1
+                chosen.add(b)
+        keep = [(b, n) for b, n in ranked if b in chosen]
+    return keep
+
+
 def write_provider_shards(providers: dict, agg: dict, args, out_dir: str):
     log("Writing provider shards ...")
     shards = args.shards
@@ -899,8 +937,8 @@ def write_provider_shards(providers: dict, agg: dict, args, out_dir: str):
             p = providers[npi]
             o = outs.get(npi, {})
             i = ins.get(npi, {})
-            o_rows = [flow_row(providers[b], n, out_tot[npi]) for b, n in sorted(o.items(), key=lambda kv: -kv[1])[:args.top]]
-            i_rows = [flow_row(providers[a], n, in_tot[npi]) for a, n in sorted(i.items(), key=lambda kv: -kv[1])[:args.top]]
+            o_rows = [flow_row(providers[b], n, out_tot[npi]) for b, n in select_top(o, providers, args)]
+            i_rows = [flow_row(providers[a], n, in_tot[npi]) for a, n in select_top(i, providers, args)]
             payload[str(npi)] = {
                 "p": p.profile(),
                 "t": [out_tot[npi], in_tot[npi], agg["out_partners"][npi], agg["in_partners"][npi]],
@@ -1023,9 +1061,12 @@ def write_meta(providers: dict, agg: dict, states, args, out_dir: str, extra: di
         "window_days": args.window,
         "flows_label": args.flows_label or f"CMS Physician Shared Patient Patterns, {args.year}, {args.window}-day window",
         "prior_year": args.prior_year,
+        "prior_note": ("The 2015 file covers January through September 2015 while 2014 covers the full year, "
+                       "so year-over-year changes understate growth.") if (args.year == 2015 and args.prior_year == 2014 and not args.demo) else "",
         "min_patients": args.min_patients,
         "dd_min": args.dd_min,
         "top": args.top,
+        "top_per_type": args.top_per_type,
         "growth_min": args.growth_min,
         "shards": args.shards,
         "demo": bool(args.demo),
@@ -1206,6 +1247,7 @@ def parse_args(argv=None):
     ap.add_argument("--dd-min", type=int, default=40, help="doctor->doctor pairs need this many patients to enter state flow tables")
     ap.add_argument("--growth-min", type=int, default=30, help="minimum current-year patients for growth analysis")
     ap.add_argument("--top", type=int, default=100, help="destinations/sources kept per provider page (default 100)")
+    ap.add_argument("--top-per-type", type=int, default=50, help="partners kept per type on top of --top (default 50)")
     ap.add_argument("--top-lists", type=int, default=50, help="length of trending lists (default 50)")
     ap.add_argument("--flows-cap", type=int, default=150000, help="max rows per state flow table")
     ap.add_argument("--shards", type=int, default=1000, help="number of provider shard files (default 1000)")
