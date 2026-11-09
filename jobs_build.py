@@ -210,12 +210,17 @@ def role_family(title: str) -> str:
             if m and (best is None or m.start() < best):
                 best = m.start()
         return best
-    if has("director of nursing", "don", "adon", "adns", "assistant director", "regional director", "chief nursing", "cno",
+    if has("case manager", "rncm", "mds", "care planner"):
+        return "MDS"
+    if has("business development", "sales", "marketing", "pharmacist", "pharmacy", "veterinary", "receptionist", "dietary", "housekeeping"):
+        return "OTHER"
+    if has("director of nursing", "don", "adon", "adns", "assistant director", "regional director", "chief nursing", "cno", "director",
+           "vp", "vice president", "manager", "associate director",
            "clinical director", "program director", "wellness director", "director of health", "nurse manager", "unit manager",
            "supervisor", "supv", "team lead", "clinical team lead", "associate manager", "rn manager", "nursing manager"):
         return "LEAD"
     if has("mds", "assessor", "wound care", "infection control", "infection preventionist", "staff educator", "educator",
-           "instructor", "case manager", "rncm", "admissions", "admission nurse", "coordinator"):
+           "instructor", "case manager", "rncm", "admissions", "admission nurse", "coordinator", "care planner", "quality assurance", "qapi"):
         return "MDS"
     if has("nurse practitioner", "np", "physician assistant", "advanced practice", "app", "physician", "md"):
         return "APP"
