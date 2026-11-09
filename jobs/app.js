@@ -73,7 +73,7 @@
       container.innerHTML = rows.length
         ? `<div class="table-wrap"><table class="data"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>
            <div class="table-foot"><span>Showing ${fmt(shown.length)} of ${fmt(rows.length)}</span>
-           <span>${shown.length < rows.length ? '<button class="btn ghost" data-more>Show more</button> ' : ''}${opts.csv ? '<button class="btn ghost" data-csv>Download CSV</button>' : ''}</span></div>`
+           <span>${shown.length < rows.length ? '<button class="btn ghost" data-more>Show more</button> <button class="btn ghost" data-all>Show all</button> ' : ''}${opts.csv ? '<button class="btn ghost" data-csv>Download CSV</button>' : ''}</span></div>`
         : `<div class="empty">${esc(opts.empty || 'Nothing matches these filters.')}</div>`;
       container.querySelectorAll('th.sortable').forEach((th) => th.addEventListener('click', () => {
         const k = th.dataset.key;
@@ -83,6 +83,8 @@
       }));
       const more = container.querySelector('[data-more]');
       if (more) more.addEventListener('click', () => { state.page++; draw(); });
+      const all = container.querySelector('[data-all]');
+      if (all) all.addEventListener('click', () => { state.page = Math.ceil(rows.length / pageSize); draw(); });
       const csvBtn = container.querySelector('[data-csv]');
       if (csvBtn) csvBtn.addEventListener('click', () => downloadCsv(opts.csv.name, opts.csv.header, rows.map(opts.csv.row)));
     }

@@ -1,37 +1,2630 @@
 {
-  "note": "Standing query plan. Run every query on each pull (Indeed connector search_jobs, country US) and paste each result verbatim into jobs/in/<YYYY-MM-DD>/<slug>.md with 'search:' and 'location:' header lines. Keeping the plan fixed is what makes postings trackable over time.",
-  "queries": [
-    {"search": "registered nurse nursing home", "location": "New York, NY"},
-    {"search": "registered nurse rehabilitation center", "location": "Long Island, NY"},
-    {"search": "RN supervisor nursing home", "location": "Queens, NY"},
-    {"search": "LPN nursing home", "location": "Brooklyn, NY"},
-    {"search": "CNA nursing home", "location": "Bronx, NY"},
-    {"search": "MDS coordinator", "location": "New York, NY"},
-    {"search": "home health aide", "location": "Brooklyn, NY"},
-    {"search": "travel nurse RN contract", "location": "New York, NY", "job_type": "contract"},
-    {"search": "CNA skilled nursing facility", "location": "Newark, NJ"},
-    {"search": "CNA nursing home", "location": "Jersey City, NJ"},
-    {"search": "Director of Nursing skilled nursing", "location": "New Jersey"},
-    {"search": "registered nurse nursing home", "location": "Lakewood, NJ"},
-    {"search": "RN unit manager nursing home", "location": "Lakewood, NJ"},
-    {"search": "LPN nursing home", "location": "Toms River, NJ"},
-    {"search": "home health aide", "location": "Hartford, CT"},
-    {"search": "CNA assisted living", "location": "Stamford, CT"},
-    {"search": "registered nurse nursing home", "location": "New Haven, CT"},
-    {"search": "registered nurse long term care", "location": "Miami, FL"},
-    {"search": "CNA nursing home", "location": "Fort Lauderdale, FL"},
-    {"search": "physical therapist skilled nursing", "location": "Tampa, FL"},
-    {"search": "LPN skilled nursing facility", "location": "Orlando, FL"},
-    {"search": "Director of Nursing nursing home", "location": "Florida"},
-    {"search": "CNA nursing home", "location": "Houston, TX"},
-    {"search": "registered nurse hospital", "location": "Dallas, TX"},
-    {"search": "RN nursing home", "location": "Dallas, TX"},
-    {"search": "LVN nursing home", "location": "San Antonio, TX"},
-    {"search": "LVN skilled nursing facility", "location": "Los Angeles, CA"},
-    {"search": "CNA skilled nursing", "location": "Los Angeles, CA"},
-    {"search": "hospice nurse", "location": "San Diego, CA"},
-    {"search": "RN skilled nursing facility", "location": "Sacramento, CA"},
-    {"search": "nurse practitioner nursing home", "location": "Philadelphia, PA"},
-    {"search": "respiratory therapist", "location": "Chicago, IL"}
-  ]
+ "note": "Standing query plan. Run every query on each pull (Indeed connector search_jobs, country US) and paste each result verbatim into jobs/in/<YYYY-MM-DD>/<slug>.md with 'search:' and 'location:' header lines. Keeping the plan fixed is what makes postings trackable over time. Tiers: core roles in every market; extra roles in the tri-state metros; job-type variants in the densest markets (each variant surfaces a different top-10).",
+ "queries": [
+  {
+   "search": "registered nurse nursing home",
+   "location": "New York, NY"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "New York, NY"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "New York, NY"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "New York, NY"
+  },
+  {
+   "search": "director of nursing",
+   "location": "New York, NY"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "New York, NY"
+  },
+  {
+   "search": "home health aide",
+   "location": "New York, NY"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "New York, NY"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "New York, NY"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "home health aide",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Bronx, NY"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Bronx, NY"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Bronx, NY"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Bronx, NY"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Bronx, NY"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Bronx, NY"
+  },
+  {
+   "search": "home health aide",
+   "location": "Bronx, NY"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Bronx, NY"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Bronx, NY"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Queens, NY"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Queens, NY"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Queens, NY"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Queens, NY"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Queens, NY"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Queens, NY"
+  },
+  {
+   "search": "home health aide",
+   "location": "Queens, NY"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Queens, NY"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Queens, NY"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Staten Island, NY"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Staten Island, NY"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Staten Island, NY"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Staten Island, NY"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Staten Island, NY"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Staten Island, NY"
+  },
+  {
+   "search": "home health aide",
+   "location": "Staten Island, NY"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Staten Island, NY"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Staten Island, NY"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Hempstead, NY"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Hempstead, NY"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Hempstead, NY"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Hempstead, NY"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Hempstead, NY"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Hempstead, NY"
+  },
+  {
+   "search": "home health aide",
+   "location": "Hempstead, NY"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Hempstead, NY"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Hempstead, NY"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Huntington, NY"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Huntington, NY"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Huntington, NY"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Huntington, NY"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Huntington, NY"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Huntington, NY"
+  },
+  {
+   "search": "home health aide",
+   "location": "Huntington, NY"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Huntington, NY"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Huntington, NY"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "White Plains, NY"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "White Plains, NY"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "White Plains, NY"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "White Plains, NY"
+  },
+  {
+   "search": "director of nursing",
+   "location": "White Plains, NY"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "White Plains, NY"
+  },
+  {
+   "search": "home health aide",
+   "location": "White Plains, NY"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "White Plains, NY"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "White Plains, NY"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Yonkers, NY"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Yonkers, NY"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Yonkers, NY"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Yonkers, NY"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Yonkers, NY"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Yonkers, NY"
+  },
+  {
+   "search": "home health aide",
+   "location": "Yonkers, NY"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Yonkers, NY"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Yonkers, NY"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Spring Valley, NY"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Spring Valley, NY"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Spring Valley, NY"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Spring Valley, NY"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Spring Valley, NY"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Spring Valley, NY"
+  },
+  {
+   "search": "home health aide",
+   "location": "Spring Valley, NY"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Spring Valley, NY"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Spring Valley, NY"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "home health aide",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Jersey City, NJ"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Jersey City, NJ"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Jersey City, NJ"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Jersey City, NJ"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Jersey City, NJ"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Jersey City, NJ"
+  },
+  {
+   "search": "home health aide",
+   "location": "Jersey City, NJ"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Jersey City, NJ"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Jersey City, NJ"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "home health aide",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Toms River, NJ"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Toms River, NJ"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Toms River, NJ"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Toms River, NJ"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Toms River, NJ"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Toms River, NJ"
+  },
+  {
+   "search": "home health aide",
+   "location": "Toms River, NJ"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Toms River, NJ"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Toms River, NJ"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Paterson, NJ"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Paterson, NJ"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Paterson, NJ"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Paterson, NJ"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Paterson, NJ"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Paterson, NJ"
+  },
+  {
+   "search": "home health aide",
+   "location": "Paterson, NJ"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Paterson, NJ"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Paterson, NJ"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Edison, NJ"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Edison, NJ"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Edison, NJ"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Edison, NJ"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Edison, NJ"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Edison, NJ"
+  },
+  {
+   "search": "home health aide",
+   "location": "Edison, NJ"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Edison, NJ"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Edison, NJ"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Trenton, NJ"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Trenton, NJ"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Trenton, NJ"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Trenton, NJ"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Trenton, NJ"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Trenton, NJ"
+  },
+  {
+   "search": "home health aide",
+   "location": "Trenton, NJ"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Trenton, NJ"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Trenton, NJ"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Cherry Hill, NJ"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Cherry Hill, NJ"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Cherry Hill, NJ"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Cherry Hill, NJ"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Cherry Hill, NJ"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Cherry Hill, NJ"
+  },
+  {
+   "search": "home health aide",
+   "location": "Cherry Hill, NJ"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Cherry Hill, NJ"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Cherry Hill, NJ"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "home health aide",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "New Haven, CT"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "New Haven, CT"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "New Haven, CT"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "New Haven, CT"
+  },
+  {
+   "search": "director of nursing",
+   "location": "New Haven, CT"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "New Haven, CT"
+  },
+  {
+   "search": "home health aide",
+   "location": "New Haven, CT"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "New Haven, CT"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "New Haven, CT"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Stamford, CT"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Stamford, CT"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Stamford, CT"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Stamford, CT"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Stamford, CT"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Stamford, CT"
+  },
+  {
+   "search": "home health aide",
+   "location": "Stamford, CT"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Stamford, CT"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Stamford, CT"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Bridgeport, CT"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Bridgeport, CT"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Bridgeport, CT"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Bridgeport, CT"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Bridgeport, CT"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Bridgeport, CT"
+  },
+  {
+   "search": "home health aide",
+   "location": "Bridgeport, CT"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Bridgeport, CT"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Bridgeport, CT"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Albany, NY"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Albany, NY"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Albany, NY"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Albany, NY"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Albany, NY"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Albany, NY"
+  },
+  {
+   "search": "home health aide",
+   "location": "Albany, NY"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Albany, NY"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Albany, NY"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Rochester, NY"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Rochester, NY"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Rochester, NY"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Rochester, NY"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Rochester, NY"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Rochester, NY"
+  },
+  {
+   "search": "home health aide",
+   "location": "Rochester, NY"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Rochester, NY"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Rochester, NY"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Buffalo, NY"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Buffalo, NY"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Buffalo, NY"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Buffalo, NY"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Buffalo, NY"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Buffalo, NY"
+  },
+  {
+   "search": "home health aide",
+   "location": "Buffalo, NY"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Buffalo, NY"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Buffalo, NY"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Philadelphia, PA"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Philadelphia, PA"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Philadelphia, PA"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Philadelphia, PA"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Philadelphia, PA"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Philadelphia, PA"
+  },
+  {
+   "search": "home health aide",
+   "location": "Philadelphia, PA"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Philadelphia, PA"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Philadelphia, PA"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Pittsburgh, PA"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Pittsburgh, PA"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Pittsburgh, PA"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Pittsburgh, PA"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Pittsburgh, PA"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Pittsburgh, PA"
+  },
+  {
+   "search": "home health aide",
+   "location": "Pittsburgh, PA"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Pittsburgh, PA"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Pittsburgh, PA"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Baltimore, MD"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Baltimore, MD"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Baltimore, MD"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Baltimore, MD"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Baltimore, MD"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Baltimore, MD"
+  },
+  {
+   "search": "home health aide",
+   "location": "Baltimore, MD"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Baltimore, MD"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Baltimore, MD"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Boston, MA"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Boston, MA"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Boston, MA"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Boston, MA"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Boston, MA"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Boston, MA"
+  },
+  {
+   "search": "home health aide",
+   "location": "Boston, MA"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Boston, MA"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Boston, MA"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Miami, FL"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Miami, FL"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Miami, FL"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Miami, FL"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Miami, FL"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Miami, FL"
+  },
+  {
+   "search": "home health aide",
+   "location": "Miami, FL"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Miami, FL"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Miami, FL"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Fort Lauderdale, FL"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Fort Lauderdale, FL"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Fort Lauderdale, FL"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Fort Lauderdale, FL"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Fort Lauderdale, FL"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Fort Lauderdale, FL"
+  },
+  {
+   "search": "home health aide",
+   "location": "Fort Lauderdale, FL"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Fort Lauderdale, FL"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Fort Lauderdale, FL"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "West Palm Beach, FL"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "West Palm Beach, FL"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "West Palm Beach, FL"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "West Palm Beach, FL"
+  },
+  {
+   "search": "director of nursing",
+   "location": "West Palm Beach, FL"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "West Palm Beach, FL"
+  },
+  {
+   "search": "home health aide",
+   "location": "West Palm Beach, FL"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "West Palm Beach, FL"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "West Palm Beach, FL"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Orlando, FL"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Orlando, FL"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Orlando, FL"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Orlando, FL"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Orlando, FL"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Orlando, FL"
+  },
+  {
+   "search": "home health aide",
+   "location": "Orlando, FL"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Orlando, FL"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Orlando, FL"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Tampa, FL"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Tampa, FL"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Tampa, FL"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Tampa, FL"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Tampa, FL"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Tampa, FL"
+  },
+  {
+   "search": "home health aide",
+   "location": "Tampa, FL"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Tampa, FL"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Tampa, FL"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Jacksonville, FL"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Jacksonville, FL"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Jacksonville, FL"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Jacksonville, FL"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Jacksonville, FL"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Jacksonville, FL"
+  },
+  {
+   "search": "home health aide",
+   "location": "Jacksonville, FL"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Jacksonville, FL"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Jacksonville, FL"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Houston, TX"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Houston, TX"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Houston, TX"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Houston, TX"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Houston, TX"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Houston, TX"
+  },
+  {
+   "search": "home health aide",
+   "location": "Houston, TX"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Houston, TX"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Houston, TX"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Dallas, TX"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Dallas, TX"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Dallas, TX"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Dallas, TX"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Dallas, TX"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Dallas, TX"
+  },
+  {
+   "search": "home health aide",
+   "location": "Dallas, TX"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Dallas, TX"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Dallas, TX"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "San Antonio, TX"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "San Antonio, TX"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "San Antonio, TX"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "San Antonio, TX"
+  },
+  {
+   "search": "director of nursing",
+   "location": "San Antonio, TX"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "San Antonio, TX"
+  },
+  {
+   "search": "home health aide",
+   "location": "San Antonio, TX"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "San Antonio, TX"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "San Antonio, TX"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Austin, TX"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Austin, TX"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Austin, TX"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Austin, TX"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Austin, TX"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Austin, TX"
+  },
+  {
+   "search": "home health aide",
+   "location": "Austin, TX"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Austin, TX"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Austin, TX"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Los Angeles, CA"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Los Angeles, CA"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Los Angeles, CA"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Los Angeles, CA"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Los Angeles, CA"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Los Angeles, CA"
+  },
+  {
+   "search": "home health aide",
+   "location": "Los Angeles, CA"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Los Angeles, CA"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Los Angeles, CA"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "San Diego, CA"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "San Diego, CA"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "San Diego, CA"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "San Diego, CA"
+  },
+  {
+   "search": "director of nursing",
+   "location": "San Diego, CA"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "San Diego, CA"
+  },
+  {
+   "search": "home health aide",
+   "location": "San Diego, CA"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "San Diego, CA"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "San Diego, CA"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Sacramento, CA"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Sacramento, CA"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Sacramento, CA"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Sacramento, CA"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Sacramento, CA"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Sacramento, CA"
+  },
+  {
+   "search": "home health aide",
+   "location": "Sacramento, CA"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Sacramento, CA"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Sacramento, CA"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "San Francisco, CA"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "San Francisco, CA"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "San Francisco, CA"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "San Francisco, CA"
+  },
+  {
+   "search": "director of nursing",
+   "location": "San Francisco, CA"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "San Francisco, CA"
+  },
+  {
+   "search": "home health aide",
+   "location": "San Francisco, CA"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "San Francisco, CA"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "San Francisco, CA"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Chicago, IL"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Chicago, IL"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Chicago, IL"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Chicago, IL"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Chicago, IL"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Chicago, IL"
+  },
+  {
+   "search": "home health aide",
+   "location": "Chicago, IL"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Chicago, IL"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Chicago, IL"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Atlanta, GA"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Atlanta, GA"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Atlanta, GA"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Atlanta, GA"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Atlanta, GA"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Atlanta, GA"
+  },
+  {
+   "search": "home health aide",
+   "location": "Atlanta, GA"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Atlanta, GA"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Atlanta, GA"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Phoenix, AZ"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Phoenix, AZ"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Phoenix, AZ"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Phoenix, AZ"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Phoenix, AZ"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Phoenix, AZ"
+  },
+  {
+   "search": "home health aide",
+   "location": "Phoenix, AZ"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Phoenix, AZ"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Phoenix, AZ"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Cleveland, OH"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Cleveland, OH"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Cleveland, OH"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Cleveland, OH"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Cleveland, OH"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Cleveland, OH"
+  },
+  {
+   "search": "home health aide",
+   "location": "Cleveland, OH"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Cleveland, OH"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Cleveland, OH"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Detroit, MI"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Detroit, MI"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Detroit, MI"
+  },
+  {
+   "search": "RN supervisor nursing home",
+   "location": "Detroit, MI"
+  },
+  {
+   "search": "director of nursing",
+   "location": "Detroit, MI"
+  },
+  {
+   "search": "MDS coordinator",
+   "location": "Detroit, MI"
+  },
+  {
+   "search": "home health aide",
+   "location": "Detroit, MI"
+  },
+  {
+   "search": "hospice nurse",
+   "location": "Detroit, MI"
+  },
+  {
+   "search": "physical therapist skilled nursing",
+   "location": "Detroit, MI"
+  },
+  {
+   "search": "unit manager RN",
+   "location": "New York, NY"
+  },
+  {
+   "search": "assistant director of nursing",
+   "location": "New York, NY"
+  },
+  {
+   "search": "wound care nurse",
+   "location": "New York, NY"
+  },
+  {
+   "search": "infection preventionist nursing home",
+   "location": "New York, NY"
+  },
+  {
+   "search": "staff development coordinator nurse",
+   "location": "New York, NY"
+  },
+  {
+   "search": "charge nurse",
+   "location": "New York, NY"
+  },
+  {
+   "search": "medication aide",
+   "location": "New York, NY"
+  },
+  {
+   "search": "occupational therapist skilled nursing",
+   "location": "New York, NY"
+  },
+  {
+   "search": "speech language pathologist skilled nursing",
+   "location": "New York, NY"
+  },
+  {
+   "search": "respiratory therapist",
+   "location": "New York, NY"
+  },
+  {
+   "search": "nurse practitioner nursing home",
+   "location": "New York, NY"
+  },
+  {
+   "search": "RN case manager home health",
+   "location": "New York, NY"
+  },
+  {
+   "search": "LPN home health",
+   "location": "New York, NY"
+  },
+  {
+   "search": "CNA hospital",
+   "location": "New York, NY"
+  },
+  {
+   "search": "registered nurse hospital",
+   "location": "New York, NY"
+  },
+  {
+   "search": "registered nurse assisted living",
+   "location": "New York, NY"
+  },
+  {
+   "search": "LPN assisted living",
+   "location": "New York, NY"
+  },
+  {
+   "search": "caregiver assisted living",
+   "location": "New York, NY"
+  },
+  {
+   "search": "RN rehabilitation center",
+   "location": "New York, NY"
+  },
+  {
+   "search": "LPN long term care",
+   "location": "New York, NY"
+  },
+  {
+   "search": "CNA long term care",
+   "location": "New York, NY"
+  },
+  {
+   "search": "unit manager RN",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "assistant director of nursing",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "wound care nurse",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "infection preventionist nursing home",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "staff development coordinator nurse",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "charge nurse",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "medication aide",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "occupational therapist skilled nursing",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "speech language pathologist skilled nursing",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "respiratory therapist",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "nurse practitioner nursing home",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "RN case manager home health",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "LPN home health",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "CNA hospital",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "registered nurse hospital",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "registered nurse assisted living",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "LPN assisted living",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "caregiver assisted living",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "RN rehabilitation center",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "LPN long term care",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "CNA long term care",
+   "location": "Brooklyn, NY"
+  },
+  {
+   "search": "unit manager RN",
+   "location": "Long Island, NY"
+  },
+  {
+   "search": "assistant director of nursing",
+   "location": "Long Island, NY"
+  },
+  {
+   "search": "wound care nurse",
+   "location": "Long Island, NY"
+  },
+  {
+   "search": "infection preventionist nursing home",
+   "location": "Long Island, NY"
+  },
+  {
+   "search": "staff development coordinator nurse",
+   "location": "Long Island, NY"
+  },
+  {
+   "search": "charge nurse",
+   "location": "Long Island, NY"
+  },
+  {
+   "search": "medication aide",
+   "location": "Long Island, NY"
+  },
+  {
+   "search": "occupational therapist skilled nursing",
+   "location": "Long Island, NY"
+  },
+  {
+   "search": "speech language pathologist skilled nursing",
+   "location": "Long Island, NY"
+  },
+  {
+   "search": "respiratory therapist",
+   "location": "Long Island, NY"
+  },
+  {
+   "search": "nurse practitioner nursing home",
+   "location": "Long Island, NY"
+  },
+  {
+   "search": "RN case manager home health",
+   "location": "Long Island, NY"
+  },
+  {
+   "search": "LPN home health",
+   "location": "Long Island, NY"
+  },
+  {
+   "search": "CNA hospital",
+   "location": "Long Island, NY"
+  },
+  {
+   "search": "registered nurse hospital",
+   "location": "Long Island, NY"
+  },
+  {
+   "search": "registered nurse assisted living",
+   "location": "Long Island, NY"
+  },
+  {
+   "search": "LPN assisted living",
+   "location": "Long Island, NY"
+  },
+  {
+   "search": "caregiver assisted living",
+   "location": "Long Island, NY"
+  },
+  {
+   "search": "RN rehabilitation center",
+   "location": "Long Island, NY"
+  },
+  {
+   "search": "LPN long term care",
+   "location": "Long Island, NY"
+  },
+  {
+   "search": "CNA long term care",
+   "location": "Long Island, NY"
+  },
+  {
+   "search": "unit manager RN",
+   "location": "Westchester County, NY"
+  },
+  {
+   "search": "assistant director of nursing",
+   "location": "Westchester County, NY"
+  },
+  {
+   "search": "wound care nurse",
+   "location": "Westchester County, NY"
+  },
+  {
+   "search": "infection preventionist nursing home",
+   "location": "Westchester County, NY"
+  },
+  {
+   "search": "staff development coordinator nurse",
+   "location": "Westchester County, NY"
+  },
+  {
+   "search": "charge nurse",
+   "location": "Westchester County, NY"
+  },
+  {
+   "search": "medication aide",
+   "location": "Westchester County, NY"
+  },
+  {
+   "search": "occupational therapist skilled nursing",
+   "location": "Westchester County, NY"
+  },
+  {
+   "search": "speech language pathologist skilled nursing",
+   "location": "Westchester County, NY"
+  },
+  {
+   "search": "respiratory therapist",
+   "location": "Westchester County, NY"
+  },
+  {
+   "search": "nurse practitioner nursing home",
+   "location": "Westchester County, NY"
+  },
+  {
+   "search": "RN case manager home health",
+   "location": "Westchester County, NY"
+  },
+  {
+   "search": "LPN home health",
+   "location": "Westchester County, NY"
+  },
+  {
+   "search": "CNA hospital",
+   "location": "Westchester County, NY"
+  },
+  {
+   "search": "registered nurse hospital",
+   "location": "Westchester County, NY"
+  },
+  {
+   "search": "registered nurse assisted living",
+   "location": "Westchester County, NY"
+  },
+  {
+   "search": "LPN assisted living",
+   "location": "Westchester County, NY"
+  },
+  {
+   "search": "caregiver assisted living",
+   "location": "Westchester County, NY"
+  },
+  {
+   "search": "RN rehabilitation center",
+   "location": "Westchester County, NY"
+  },
+  {
+   "search": "LPN long term care",
+   "location": "Westchester County, NY"
+  },
+  {
+   "search": "CNA long term care",
+   "location": "Westchester County, NY"
+  },
+  {
+   "search": "unit manager RN",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "assistant director of nursing",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "wound care nurse",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "infection preventionist nursing home",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "staff development coordinator nurse",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "charge nurse",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "medication aide",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "occupational therapist skilled nursing",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "speech language pathologist skilled nursing",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "respiratory therapist",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "nurse practitioner nursing home",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "RN case manager home health",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "LPN home health",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "CNA hospital",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "registered nurse hospital",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "registered nurse assisted living",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "LPN assisted living",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "caregiver assisted living",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "RN rehabilitation center",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "LPN long term care",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "CNA long term care",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "unit manager RN",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "assistant director of nursing",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "wound care nurse",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "infection preventionist nursing home",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "staff development coordinator nurse",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "charge nurse",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "medication aide",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "occupational therapist skilled nursing",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "speech language pathologist skilled nursing",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "respiratory therapist",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "nurse practitioner nursing home",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "RN case manager home health",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "LPN home health",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "CNA hospital",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "registered nurse hospital",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "registered nurse assisted living",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "LPN assisted living",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "caregiver assisted living",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "RN rehabilitation center",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "LPN long term care",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "CNA long term care",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "unit manager RN",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "assistant director of nursing",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "wound care nurse",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "infection preventionist nursing home",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "staff development coordinator nurse",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "charge nurse",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "medication aide",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "occupational therapist skilled nursing",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "speech language pathologist skilled nursing",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "respiratory therapist",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "nurse practitioner nursing home",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "RN case manager home health",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "LPN home health",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "CNA hospital",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "registered nurse hospital",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "registered nurse assisted living",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "LPN assisted living",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "caregiver assisted living",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "RN rehabilitation center",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "LPN long term care",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "CNA long term care",
+   "location": "Hartford, CT"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "New York, NY",
+   "job_type": "fulltime"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "New York, NY",
+   "job_type": "parttime"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "New York, NY",
+   "job_type": "contract"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "New York, NY",
+   "job_type": "temporary"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "New York, NY",
+   "job_type": "fulltime"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "New York, NY",
+   "job_type": "parttime"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "New York, NY",
+   "job_type": "contract"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "New York, NY",
+   "job_type": "temporary"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "New York, NY",
+   "job_type": "fulltime"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "New York, NY",
+   "job_type": "parttime"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "New York, NY",
+   "job_type": "contract"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "New York, NY",
+   "job_type": "temporary"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Brooklyn, NY",
+   "job_type": "fulltime"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Brooklyn, NY",
+   "job_type": "parttime"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Brooklyn, NY",
+   "job_type": "contract"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Brooklyn, NY",
+   "job_type": "temporary"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Brooklyn, NY",
+   "job_type": "fulltime"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Brooklyn, NY",
+   "job_type": "parttime"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Brooklyn, NY",
+   "job_type": "contract"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Brooklyn, NY",
+   "job_type": "temporary"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Brooklyn, NY",
+   "job_type": "fulltime"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Brooklyn, NY",
+   "job_type": "parttime"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Brooklyn, NY",
+   "job_type": "contract"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Brooklyn, NY",
+   "job_type": "temporary"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Newark, NJ",
+   "job_type": "fulltime"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Newark, NJ",
+   "job_type": "parttime"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Newark, NJ",
+   "job_type": "contract"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Newark, NJ",
+   "job_type": "temporary"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Newark, NJ",
+   "job_type": "fulltime"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Newark, NJ",
+   "job_type": "parttime"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Newark, NJ",
+   "job_type": "contract"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Newark, NJ",
+   "job_type": "temporary"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Newark, NJ",
+   "job_type": "fulltime"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Newark, NJ",
+   "job_type": "parttime"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Newark, NJ",
+   "job_type": "contract"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Newark, NJ",
+   "job_type": "temporary"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Lakewood, NJ",
+   "job_type": "fulltime"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Lakewood, NJ",
+   "job_type": "parttime"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Lakewood, NJ",
+   "job_type": "contract"
+  },
+  {
+   "search": "registered nurse nursing home",
+   "location": "Lakewood, NJ",
+   "job_type": "temporary"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Lakewood, NJ",
+   "job_type": "fulltime"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Lakewood, NJ",
+   "job_type": "parttime"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Lakewood, NJ",
+   "job_type": "contract"
+  },
+  {
+   "search": "LPN nursing home",
+   "location": "Lakewood, NJ",
+   "job_type": "temporary"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Lakewood, NJ",
+   "job_type": "fulltime"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Lakewood, NJ",
+   "job_type": "parttime"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Lakewood, NJ",
+   "job_type": "contract"
+  },
+  {
+   "search": "CNA nursing home",
+   "location": "Lakewood, NJ",
+   "job_type": "temporary"
+  },
+  {
+   "search": "registered nurse rehabilitation center",
+   "location": "Long Island, NY"
+  },
+  {
+   "search": "travel nurse RN contract",
+   "location": "New York, NY",
+   "job_type": "contract"
+  },
+  {
+   "search": "CNA skilled nursing facility",
+   "location": "Newark, NJ"
+  },
+  {
+   "search": "Director of Nursing skilled nursing",
+   "location": "New Jersey"
+  },
+  {
+   "search": "RN unit manager nursing home",
+   "location": "Lakewood, NJ"
+  },
+  {
+   "search": "CNA assisted living",
+   "location": "Stamford, CT"
+  },
+  {
+   "search": "registered nurse long term care",
+   "location": "Miami, FL"
+  },
+  {
+   "search": "LPN skilled nursing facility",
+   "location": "Orlando, FL"
+  },
+  {
+   "search": "Director of Nursing nursing home",
+   "location": "Florida"
+  },
+  {
+   "search": "registered nurse hospital",
+   "location": "Dallas, TX"
+  },
+  {
+   "search": "RN nursing home",
+   "location": "Dallas, TX"
+  },
+  {
+   "search": "LVN nursing home",
+   "location": "San Antonio, TX"
+  },
+  {
+   "search": "LVN skilled nursing facility",
+   "location": "Los Angeles, CA"
+  },
+  {
+   "search": "CNA skilled nursing",
+   "location": "Los Angeles, CA"
+  },
+  {
+   "search": "RN skilled nursing facility",
+   "location": "Sacramento, CA"
+  },
+  {
+   "search": "nurse practitioner nursing home",
+   "location": "Philadelphia, PA"
+  },
+  {
+   "search": "respiratory therapist",
+   "location": "Chicago, IL"
+  }
+ ]
 }

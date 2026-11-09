@@ -2,3 +2,5 @@
 # One .md file per query with results; queries that returned nothing are listed here so coverage is known.
 no-results | nurse practitioner nursing home | Philadelphia, PA
 no-results | RN unit manager nursing home | Lakewood, NJ
+no-results | RN supervisor nursing home | Cherry Hill, NJ
+no-results | RN supervisor nursing home | Lakewood, NJ
