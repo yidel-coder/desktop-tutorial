@@ -90,7 +90,8 @@ jobs/data/                                     build output (committed; small pl
 python jobs_build.py        # writes jobs/data/, reports coverage against the plan
 ```
 
-With two or more pulls the build tracks first-seen / last-seen per posting, marks postings closed when their search
+The exact prompt for a weekly scheduled task is in `jobs/REFRESH_PROMPT.md`; the task needs the Indeed connector
+attached when it is created. With two or more pulls the build tracks first-seen / last-seen per posting, marks postings closed when their search
 was re-run and they did not come back, and fills the trend card. Any CSV with `title, company, location, posted,
 job_type, compensation, url` columns can be dropped into a snapshot folder as well. The Indeed connector returns at
 most 10 postings per search, so the board is a sample of demand; coverage grows with the query plan.
