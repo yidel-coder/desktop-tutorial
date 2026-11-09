@@ -1,0 +1,39 @@
+{
+  "note": "Business-development settings for the Outreach page. 'fit' decides which employers are targets; 'sender' and 'pitch' fill the email drafts. Edit freely; the build regenerates drafts on every run. Bracketed values are placeholders to replace.",
+  "fit": {
+    "settings": ["SNF", "AL", "HH", "HOS"],
+    "states": [],
+    "roles_any": ["RN", "LPN", "CNA", "LEAD", "MDS"],
+    "tiers": ["A", "B", "C"],
+    "min_postings": 1,
+    "exclude_agencies": true,
+    "exclude_confidential": true,
+    "exclude_names": []
+  },
+  "sender": {
+    "company": "MedStaff Group",
+    "name": "[Your name]",
+    "title": "[Your title]",
+    "phone": "[Your phone]",
+    "website": "medstaffgroup.net",
+    "address": "[Street address, City, ST ZIP]",
+    "calendar_link": ""
+  },
+  "pitch": {
+    "subject": "{n_open} open {top_role_lower} role{s} at {facility}: a different way to fill them",
+    "greeting": "Hi {first_name},",
+    "intro": "I noticed {facility} is advertising {n_open} open position{s} on Indeed right now{roles_clause}{age_clause}.",
+    "what_we_do": "{company} runs recruiting as an outsourced function (RPO) for nursing homes, senior living and home care operators. Our recruiters source, screen and schedule candidates under your name for a flat monthly fee, so the permanent seats stop depending on per-diem agency coverage.",
+    "ask": "If it would help to compare that against what the open seats are costing you today, I can walk you through how it would work for {facility} in 15 minutes. Would a call next week suit you?",
+    "signoff": "Best regards,",
+    "footer": "{company} · {address}\nIf you would rather not hear from us, reply with \"unsubscribe\" and we will remove you.",
+    "urgency_lines": {
+      "night": "Several of them are evening or overnight shifts, which are the hardest to fill through job boards alone.",
+      "weekend": "Weekend coverage is in the mix, which rarely fills from a posting by itself.",
+      "bonus": "You are already offering a sign-on bonus, which usually means the roles have been open for a while.",
+      "perdiem": "Some are per diem or temporary, which suggests agency coverage is already in use.",
+      "old": "The oldest posting has been up for {oldest_age} days.",
+      "below_market": "The advertised pay for {pay_role_lower} sits below the market median in your area, which makes job-board hiring slow."
+    }
+  }
+}

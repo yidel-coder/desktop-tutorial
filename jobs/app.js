@@ -11,10 +11,10 @@
 
   // ------------------------------------------------------------------ data
   async function loadAll() {
-    const names = ['meta', 'jobs', 'employers', 'markets', 'benchmarks', 'trends'];
+    const names = ['meta', 'jobs', 'employers', 'markets', 'benchmarks', 'trends', 'outreach'];
     const res = await Promise.all(names.map((n) => fetch(`${CFG.dataBase}/${n}.json`, { cache: 'no-cache' }).then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status} loading ${n}.json`); return r.json(); })));
     names.forEach((n, i) => { D[n] = res[i]; });
-    D.jobs = D.jobs.rows; D.employers = D.employers.rows; D.trends = D.trends.rows; D.bench = D.benchmarks.rows;
+    D.jobs = D.jobs.rows; D.employers = D.employers.rows; D.trends = D.trends.rows; D.bench = D.benchmarks.rows; D.outreach = (D.outreach || { rows: [] }).rows;
     D.empByKey = new Map(D.employers.map((e) => [e.key, e]));
     D.jobById = new Map(D.jobs.map((j) => [j.id, j]));
     D.live = D.jobs.filter((j) => j.status !== 'closed');
@@ -44,6 +44,11 @@
   const stat = (v, l, href, d) => `<${href ? `a href="${href}" class="stat link"` : 'div class="stat"'}><div class="v">${v}</div><div class="l">${l}</div>${d ? `<div class="d">${d}</div>` : ''}</${href ? 'a' : 'div'}>`;
   const meter = (score) => `<span class="meter" title="Demand score ${score} of 100"><span class="track"><span style="width:${Math.max(2, Math.min(100, score))}%"></span></span><b>${score}</b></span>`;
   const where = (e) => (e.cities.length ? e.cities.slice(0, 2).join(', ') + (e.cities.length > 2 ? ` +${e.cities.length - 2}` : '') + ' · ' : '') + e.states.join(', ');
+  const STATUS_LABEL = { new: 'Needs contact', ready: 'Ready to send', sent: 'Sent', replied: 'Replied', meeting: 'Meeting booked', not_interested: 'Not interested', bounced: 'Bounced', do_not_contact: 'Do not contact' };
+  const statusChip = (st) => `<span class="status st-${esc(st)}">${esc(STATUS_LABEL[st] || st)}</span>`;
+  const mailto = (r) => `mailto:${encodeURIComponent((r.contact || {}).email || '')}?subject=${encodeURIComponent(r.subject)}&body=${encodeURIComponent(r.body)}`;
+  const copyBtn = (text, label) => `<button class="btn ghost" data-copy="${esc(text)}">${esc(label || 'Copy')}</button>`;
+  function wireCopy(root) { root.querySelectorAll('[data-copy]').forEach((b) => b.addEventListener('click', async () => { try { await navigator.clipboard.writeText(b.dataset.copy); const t = b.textContent; b.textContent = 'Copied'; setTimeout(() => { b.textContent = t; }, 1200); } catch (e) { window.prompt('Copy:', b.dataset.copy); } })); }
   const median = (a) => { if (!a.length) return null; const s = a.slice().sort((x, y) => x - y); const m = Math.floor(s.length / 2); return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
 
   function sortRows(rows, key, dir, numeric, get) {
@@ -166,7 +171,7 @@
         ${stat(pctf(c.with_pay / c.postings), 'Postings listing pay', '#/pay', 'used for hourly benchmarks')}
       </div>
       <div class="grid cols-3-2">
-        <div class="card"><div class="row between"><div><h2>Call first</h2><p class="sub">Facility employers ranked by demand score: volume, role breadth, urgency, posting age and pay pressure.</p></div><a class="btn" href="#/employers">All employers</a></div>
+        <div class="card"><div class="row between"><div><h2>Call first</h2><p class="sub">Facility employers ranked by demand score: volume, role breadth, urgency, posting age and pay pressure.</p></div><a class="btn" href="#/employers">All employers</a> <a class="btn gold" href="#/outreach">Outreach list</a></div>
           ${top.map((e) => `<div class="lead">${tier(e)}<div class="who">${elink(e)} ${sbadge(e.setting)}<small>${esc(where(e))} · ${esc(e.signals.slice(0, 2).join(' · ') || 'single posting')}</small></div><div class="num"><div class="n">${fmt(e.postings)} <small class="muted">open</small></div>${meter(e.score)}</div></div>`).join('')}
         </div>
         <div>
@@ -265,7 +270,9 @@
           ${e.pay.length ? `<div class="table-wrap"><table class="data"><thead><tr><th>Role</th><th class="num">Their median</th><th class="num">Market (${esc(st || 'US')})</th><th class="num">Diff</th></tr></thead><tbody>${e.pay.map((p) => `<tr><td>${esc(roleLabel(p.role))} <span class="muted">(${p.n})</span></td><td class="num">${hr(p.employer_median)}</td><td class="num">${hr(p.market_median)}</td><td class="num ${p.diff_pct < 0 ? 'down' : 'up'}">${p.diff_pct > 0 ? '+' : ''}${p.diff_pct}%</td></tr>`).join('')}</tbody></table></div>` : '<div class="empty">No comparable pay figures.</div>'}
           ${mk ? `<p class="note">Market context: ${esc(stateName(st))} has ${fmt(mk.postings)} live postings from ${fmt(mk.employers)} facility employers and ${fmt(mk.agencies)} agencies. <a href="#/markets/${esc(st)}">Open market</a></p>` : ''}</div>
       </div>
+      ${outreachCard(e)}
       <div class="card"><h2>Postings (${fmt(js.length)})</h2>${roleLegend()}<div id="tbl"></div></div>`;
+    wireCopy(app);
     renderTable(document.getElementById('tbl'), { rows: js, sort: 'posted', dir: 'desc', cols: jobCols({ employer: false }), csv: jobCsv(`${e.key.replace(/\s+/g, '-')}-postings.csv`) });
   }
 
@@ -417,6 +424,75 @@
     document.getElementById('fbar').addEventListener('change', draw);
   }
 
+
+  // ---- Outreach --------------------------------------------------------
+  function viewOutreach(q) {
+    setTitle('Outreach');
+    const rows = D.outreach;
+    const c = D.meta.counts;
+    const f = { q: q.q || '', st: q.st || '', setting: q.setting || '', status: q.status || '', tier: q.tier || '' };
+    app.innerHTML = `<div class="page-head"><h1>Outreach</h1><p>Employers that fit your recruiting lines, with a draft email built from their own postings. Add the administrator's contact to <code>jobs/contacts.csv</code>, rebuild, and the Email button opens a ready-to-send message in your mail client. ${asofTag()}</p></div>
+      <div class="kpis" style="grid-template-columns:repeat(4,1fr)">
+        ${stat(fmt(c.targets), 'Target employers', null, 'fit the rules in bd_config.json')}
+        ${stat(fmt(c.targets_with_email), 'With an email address', null, `${fmt(c.targets - c.targets_with_email)} still need a contact`)}
+        ${stat(fmt(c.targets_contacted), 'Contacted', null, 'sent, replied or meeting')}
+        ${stat(fmt(rows.filter((r) => r.contact && r.contact.contact_name).length), 'Named contact found', null, 'name and title from public sources')}
+      </div>
+      <div class="card tight" id="fbar">${filtersBar([
+        { id: 'q', label: 'Search', value: f.q, placeholder: 'Employer, chain, city or contact' },
+        { id: 'st', label: 'State', type: 'select', value: f.st, options: stateOptions() },
+        { id: 'setting', label: 'Care setting', type: 'select', value: f.setting, options: settingOptions().filter((o) => o[0] !== 'AGENCY') },
+        { id: 'tier', label: 'Lead tier', type: 'select', value: f.tier, options: [['', 'All tiers'], ['AB', 'A and B'], ['A', 'A'], ['B', 'B'], ['C', 'C']] },
+        { id: 'status', label: 'Status', type: 'select', value: f.status, options: [['', 'All statuses']].concat(D.meta.bd.statuses.map((s) => [s, STATUS_LABEL[s] || s])) },
+      ])}</div>
+      <div class="card" id="tbl"></div>
+      <p class="note">Fit rules: settings ${(D.meta.bd.fit.settings || []).map(settingLabel).join(', ') || 'any'}; roles ${(D.meta.bd.fit.roles_any || []).map(roleLabel).join(', ') || 'any'}; tiers ${(D.meta.bd.fit.tiers || []).join(', ') || 'any'}; agencies excluded. Sender details and pitch wording live in <code>jobs/bd_config.json</code>. Drafts carry a physical address line and an opt-out sentence for CAN-SPAM; fill in the sender placeholders before sending.</p>`;
+    const cols = [
+      { key: 'tier', label: 'Tier', render: (r) => `<span class="tier ${esc(r.tier)}">${esc(r.tier)}</span>` },
+      { key: 'score', label: 'Score', num: true },
+      { key: 'name', label: 'Employer', cls: 'wrap', render: (r) => `<a href="#/e/${encodeURIComponent(r.key)}">${esc(r.name)}</a><span class="sub">${sbadge(r.setting)} ${esc(where(r))}</span>` },
+      { key: 'postings', label: 'Open', num: true },
+      { key: 'why', label: 'Why now', cls: 'wrap', sortable: false, render: (r) => `<span class="sig">${esc(r.fit_reasons[0] || '')}${r.flags.length ? '<br>' + r.flags.slice(0, 2).map(flagChip).join('') : ''}</span>` },
+      { key: 'contact', label: 'Contact', cls: 'wrap', get: (r) => (r.contact.contact_name || '') + (r.contact.email || ''), render: (r) => r.contact.contact_name || r.contact.email || r.contact.phone
+          ? `${esc(r.contact.contact_name || '')}${r.contact.contact_title ? `<span class="sub">${esc(r.contact.contact_title)}</span>` : ''}${r.contact.email ? `<span class="sub"><a href="mailto:${esc(r.contact.email)}">${esc(r.contact.email)}</a></span>` : ''}${r.contact.phone ? `<span class="sub">${esc(r.contact.phone)}</span>` : ''}${r.contact.website ? `<span class="sub"><a href="https://${esc(r.contact.website.replace(/^https?:\/\//, ''))}" target="_blank" rel="noopener">${esc(r.contact.website.replace(/^https?:\/\//, ''))}</a></span>` : ''}`
+          : `<span class="muted">Not found yet</span><span class="sub"><a href="${esc(r.indeed)}" target="_blank" rel="noopener">Indeed ↗</a> · <a href="https://www.google.com/search?q=${encodeURIComponent(r.name + ' ' + (r.cities[0] || '') + ' administrator')}" target="_blank" rel="noopener">Search ↗</a></span>` },
+      { key: 'status', label: 'Status', render: (r) => statusChip(r.status) },
+      { key: 'act', label: 'Draft', sortable: false, cls: 'nowrap', render: (r) => `${r.contact.email ? `<a class="btn gold" href="${mailto(r)}">Email</a> ` : ''}${copyBtn(r.subject + '\n\n' + r.body, 'Copy draft')}` },
+    ];
+    const apply = () => {
+      const v = readFilters(document.getElementById('fbar'));
+      const toks = tokens(v.q);
+      let out = rows;
+      if (v.st) out = out.filter((r) => r.states.includes(v.st));
+      if (v.setting) out = out.filter((r) => r.setting === v.setting);
+      if (v.tier) out = out.filter((r) => v.tier.includes(r.tier));
+      if (v.status) out = out.filter((r) => r.status === v.status);
+      if (toks.length) out = out.filter((r) => matches(r.name + ' ' + r.chain + ' ' + r.cities.join(' ') + ' ' + (r.contact.contact_name || '') + ' ' + (r.contact.email || ''), toks));
+      history.replaceState(null, '', '#/outreach' + qs(v));
+      return out;
+    };
+    const t = renderTable(document.getElementById('tbl'), { rows: apply(), cols, sort: 'score', dir: 'desc', pageSize: 50, empty: 'No targets match.',
+      csv: { name: `outreach-${D.meta.asof}.csv`, header: ['Status', 'Tier', 'Score', 'Employer', 'Chain', 'Setting', 'States', 'Cities', 'Open postings', 'Contact', 'Title', 'Email', 'Phone', 'Website', 'Subject', 'Body'],
+        row: (r) => [STATUS_LABEL[r.status] || r.status, r.tier, r.score, r.name, r.chain, settingLabel(r.setting), r.states.join('; '), r.cities.join('; '), r.postings, r.contact.contact_name, r.contact.contact_title, r.contact.email, r.contact.phone, r.contact.website, r.subject, r.body] } });
+    const redraw = () => { t.redraw(apply()); wireCopy(document.getElementById('tbl')); };
+    wireCopy(document.getElementById('tbl'));
+    document.getElementById('fbar').addEventListener('input', redraw);
+    document.getElementById('fbar').addEventListener('change', redraw);
+    document.getElementById('tbl').addEventListener('click', (e) => { if (e.target.matches('[data-more],[data-all],th.sortable')) setTimeout(() => wireCopy(document.getElementById('tbl')), 0); });
+  }
+
+  function outreachCard(e) {
+    const r = D.outreach.find((x) => x.key === e.key);
+    if (!r) return `<div class="card"><h2>Outreach</h2><p class="sub">Not a target under the current fit rules.</p><ul class="sig" style="padding-left:18px">${(e.fit ? e.fit.reasons : []).map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>`;
+    const c = r.contact || {};
+    return `<div class="card"><div class="row between"><div><h2>Outreach</h2><p class="sub">${statusChip(r.status)} · ${esc(r.fit_reasons.join(' · '))}</p></div>
+        <div class="row">${c.email ? `<a class="btn gold" href="${mailto(r)}">Email ${esc(c.contact_name ? c.contact_name.split(' ')[0] : 'administrator')}</a>` : ''}${copyBtn(r.subject + '\n\n' + r.body, 'Copy draft')}</div></div>
+      <div class="grid cols-2-3">
+        <div><h3>Contact</h3>${c.contact_name || c.email || c.phone || c.website ? `<dl class="kv">${c.contact_name ? `<dt>Name</dt><dd>${esc(c.contact_name)}</dd>` : ''}${c.contact_title ? `<dt>Title</dt><dd>${esc(c.contact_title)}</dd>` : ''}${c.email ? `<dt>Email</dt><dd><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></dd>` : ''}${c.phone ? `<dt>Phone</dt><dd>${esc(c.phone)}</dd>` : ''}${c.website ? `<dt>Website</dt><dd><a href="https://${esc(c.website.replace(/^https?:\/\//, ''))}" target="_blank" rel="noopener">${esc(c.website)}</a></dd>` : ''}${c.notes ? `<dt>Notes</dt><dd style="font-weight:400">${esc(c.notes)}</dd>` : ''}</dl>` : `<p class="muted">No contact on file. Add a row for “${esc(e.name)}” to <code>jobs/contacts.csv</code> and rebuild.</p>`}</div>
+        <div><h3>Draft</h3><div class="draft"><b>${esc(r.subject)}</b><pre class="mail">${esc(r.body)}</pre></div></div>
+      </div></div>`;
+  }
+
   // ---- Search ----------------------------------------------------------
   function viewSearch(q) {
     const query = (q.q || '').trim();
@@ -495,6 +571,7 @@
         case 'markets': viewMarkets((parts[1] || '').toUpperCase()); break;
         case 'pay': viewPay(q); break;
         case 'search': viewSearch(q); break;
+        case 'outreach': viewOutreach(q); break;
         case 'about': viewAbout(); break;
         default: app.innerHTML = '<div class="error">Page not found.</div>';
       }
