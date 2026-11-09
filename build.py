@@ -681,10 +681,10 @@ def attach_volume_context(cat: CmsCatalog, dl: Downloader, providers: dict) -> d
         for r in rows:
             ccn = re.sub(r"\D", "", pick(r, "CMS_CERTIFICATION_NUMBER_CCN", "FACILITY_ID", "FEDERAL_PROVIDER_NUMBER",
                                           "PROVIDER_ID", "CCN")).zfill(6)
-            rating = pick(r, "OVERALL_RATING", "HOSPITAL_OVERALL_RATING", "QUALITY_OF_PATIENT_CARE_STAR_RATING",
-                          "FAMILY_CAREGIVER_SURVEY_RATING", "STAR_RATING")
+            rating = next((r[c] for c in ("OVERALL_RATING", "HOSPITAL_OVERALL_RATING", "QUALITY_OF_PATIENT_CARE_STAR_RATING",
+                                          "FAMILY_CAREGIVER_SURVEY_RATING") if r.get(c)), "")
             rv = safe_float(rating)
-            if ccn in by_ccn and rv:
+            if ccn in by_ccn and rv and 1 <= rv <= 5:
                 for p in by_ccn[ccn]:
                     if p.type in (code, "R", "L") if code == "H" else p.type == code:
                         p.rating = rv
