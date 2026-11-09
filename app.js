@@ -53,7 +53,11 @@
   const pct = (n) => (n == null ? '—' : Number(n).toFixed(1) + '%');
   const badge = (t) => `<span class="badge t-${esc(t)}">${esc(TYPE_LABEL[t] || t)}</span>`;
   const plink = (npi, name) => `<a href="#/p/${esc(npi)}">${esc(name)}</a>`;
-  const stars = (r) => (r == null ? '<span class="muted">—</span>' : `<span class="stars" title="${r} star rating">${'★'.repeat(Math.round(r))}<span class="off">${'★'.repeat(5 - Math.round(r))}</span></span>`);
+  const stars = (r) => {
+    const n = Math.round(Number(r));
+    if (r == null || !Number.isFinite(n) || n < 1 || n > 5) return '<span class="muted">—</span>';
+    return `<span class="stars" title="${n} star rating">${'★'.repeat(n)}<span class="off">${'★'.repeat(5 - n)}</span></span>`;
+  };
   const yearTag = () => `<span class="year-tag">Data year ${esc(META.year)} · ${esc(META.window_days)}-day window</span>`;
   const stateName = (st) => ((META.states || []).find((s) => s.st === st) || {}).name || st;
   const bar = (share, max = 100) => `<span class="bar" aria-hidden="true"><span style="width:${Math.max(1, Math.min(100, (share / max) * 100)).toFixed(1)}%"></span></span>`;
