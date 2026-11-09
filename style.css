@@ -43,6 +43,8 @@ small, .muted { color: var(--muted); }
 .site-nav a { color: #e9eef6; padding: 8px 12px; border-radius: 8px; font-weight: 500; font-size: .95rem; }
 .site-nav a:hover { background: rgba(255,255,255,.08); text-decoration: none; }
 .site-nav a.active { background: rgba(212,160,23,.18); color: var(--gold-2); }
+.site-nav a.nav-ext { color: var(--gold-2); margin-left: auto; font-size: .9rem; }
+@media (max-width: 860px) { .site-nav a.nav-ext { margin-left: 0; } }
 .nav-toggle { display: none; background: none; border: 1px solid rgba(255,255,255,.3); color: #fff; font-size: 1.2rem; padding: 4px 10px; border-radius: 8px; margin-left: auto; }
 .header-search { display: flex; }
 .header-search input { width: 240px; border: none; border-radius: 8px 0 0 8px; padding: 8px 10px; font-size: .9rem; }

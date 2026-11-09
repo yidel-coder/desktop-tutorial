@@ -1,0 +1,4 @@
+# Queries run on 2026-11-09 through the Indeed connector (search_jobs, country US).
+# One .md file per query with results; queries that returned nothing are listed here so coverage is known.
+no-results | nurse practitioner nursing home | Philadelphia, PA
+no-results | RN unit manager nursing home | Lakewood, NJ

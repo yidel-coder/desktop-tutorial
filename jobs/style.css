@@ -1,0 +1,121 @@
+/* Hiring Demand Radar - dashboard-specific styles. Shares the navy & gold theme from ../style.css. */
+:root {
+  /* Categorical chart colors, fixed per role family (order CNA, LPN, RN, LEAD, MDS, THER, APP, OTHER).
+     Validated adjacent-pair palette; light hues (RN, LEAD, MDS) always carry a visible label or table. */
+  --c-cna: #2a78d6; --c-lpn: #eb6834; --c-rn: #1baf7a; --c-lead: #eda100;
+  --c-mds: #e87ba4; --c-ther: #008300; --c-app: #6250d6; --c-other: #e34948;
+  /* Sequential (one hue) for ranked bars, meters and ranges */
+  --seq: #2a78d6; --seq-track: #cde2fb; --seq-dark: #184f95;
+  --grid: #e1e0d9; --axis: #c3c2b7;
+}
+.brand-mark.radar::after { content: none; }
+.brand-mark.radar { background: radial-gradient(circle at center, var(--navy) 0 4px, transparent 4px 7px, var(--navy) 7px 9px, transparent 9px), var(--gold); }
+.site-nav a.ext { margin-left: auto; color: var(--gold-2); font-size: .85rem; }
+@media (max-width: 860px) { .site-nav a.ext { margin-left: 0; } }
+
+.asof { display: inline-block; background: var(--navy); color: var(--gold-2); font-size: .78rem; font-weight: 600; padding: 3px 9px; border-radius: 999px; letter-spacing: .3px; vertical-align: middle; }
+.coverage { background: var(--gold-soft); border: 1px solid #f1dc9a; color: #6b4e00; padding: 10px 14px; border-radius: 10px; font-size: .9rem; margin-bottom: 18px; }
+.coverage b { color: #4a3600; }
+
+/* KPI row */
+.kpis { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 18px; }
+@media (max-width: 1000px) { .kpis { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 560px) { .kpis { grid-template-columns: repeat(2, 1fr); } }
+.kpis .stat .v { font-size: 1.7rem; }
+.kpis .stat .d { font-size: .78rem; color: var(--muted); margin-top: 4px; }
+
+/* Cards & section heads */
+.card h2 { font-size: 1.15rem; margin-bottom: .2rem; }
+.card .sub { color: var(--muted); font-size: .86rem; margin: 0 0 12px; }
+.card.flush { padding-bottom: 8px; }
+.grid.cols-3-2 { grid-template-columns: 3fr 2fr; }
+.grid.cols-2-3 { grid-template-columns: 2fr 3fr; }
+@media (max-width: 900px) { .grid.cols-3-2, .grid.cols-2-3 { grid-template-columns: 1fr; } }
+
+/* Ranked horizontal bars (one hue). Row: label | track | value */
+.hbars { display: grid; gap: 7px; }
+.hbar { display: grid; grid-template-columns: minmax(120px, 34%) 1fr 64px; align-items: center; gap: 10px; font-size: .9rem; min-height: 22px; }
+.hbar .lbl { color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hbar .lbl a { color: var(--ink); }
+.hbar .lbl small { color: var(--muted); margin-left: 6px; }
+.hbar .track { position: relative; height: 20px; border-left: 1px solid var(--axis); }
+.hbar .fill { position: absolute; left: 0; top: 2px; height: 16px; background: var(--seq); border-radius: 0 4px 4px 0; min-width: 2px; transition: width .25s; }
+.hbar .fill.ghost { background: var(--seq-track); }
+.hbar .val { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600; }
+.hbar .val small { color: var(--muted); font-weight: 400; }
+.hbar:hover .fill { filter: brightness(.9); }
+.hbar.emph .fill { background: var(--seq-dark); }
+@media (max-width: 560px) { .hbar { grid-template-columns: 100px 1fr 56px; font-size: .82rem; } }
+
+/* Thin segmented bar (part-to-whole beside its figures) */
+.seg { display: flex; height: 8px; gap: 2px; width: 100%; max-width: 180px; border-radius: 4px; overflow: hidden; background: transparent; }
+.seg span { display: block; height: 100%; min-width: 2px; }
+.seg span:first-child { border-radius: 4px 0 0 4px; } .seg span:last-child { border-radius: 0 4px 4px 0; }
+.seg span:only-child { border-radius: 4px; }
+.r-CNA { background: var(--c-cna); } .r-LPN { background: var(--c-lpn); } .r-RN { background: var(--c-rn); } .r-LEAD { background: var(--c-lead); }
+.r-MDS { background: var(--c-mds); } .r-THER { background: var(--c-ther); } .r-APP { background: var(--c-app); } .r-OTHER { background: var(--c-other); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: .8rem; color: var(--muted); margin: 6px 0 10px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+
+/* Score meter (same ramp track) */
+.meter { display: inline-flex; align-items: center; gap: 8px; }
+.meter .track { width: 90px; height: 8px; background: var(--seq-track); border-radius: 4px; overflow: hidden; }
+.meter .track span { display: block; height: 100%; background: var(--seq); border-radius: 4px; }
+.meter b { font-variant-numeric: tabular-nums; color: var(--navy); min-width: 2em; }
+
+/* Pay range: p25-p75 band with median tick, scaled to a shared max */
+.range { position: relative; height: 18px; width: 100%; max-width: 220px; border-bottom: 1px solid var(--grid); }
+.range .band { position: absolute; top: 4px; height: 10px; background: var(--seq-track); border-radius: 3px; }
+.range .med { position: absolute; top: 1px; width: 3px; height: 16px; background: var(--seq-dark); border-radius: 1px; margin-left: -1px; }
+.range .ref { position: absolute; top: 3px; width: 1px; height: 12px; background: var(--axis); }
+
+/* Tier and flag chips */
+.tier { display: inline-block; font-weight: 800; font-size: .78rem; width: 26px; height: 26px; line-height: 26px; text-align: center; border-radius: 7px; color: #fff; background: var(--muted); }
+.tier.A { background: var(--navy); color: var(--gold-2); box-shadow: 0 0 0 2px var(--gold) inset; }
+.tier.B { background: var(--navy-3); } .tier.C { background: #9aa5b5; }
+.tier.AG { background: #fff; color: var(--muted); border: 1px dashed var(--muted); font-size: .66rem; }
+.badge.s-SNF { background: #2e7d32; } .badge.s-AL { background: #6a1b9a; } .badge.s-HH { background: #0277bd; } .badge.s-HOS { background: #ad1457; }
+.badge.s-HOSP { background: #1f4a8a; } .badge.s-AGENCY { background: #5b6676; } .badge.s-OTHER { background: #8d99ae; }
+.flag { display: inline-block; font-size: .72rem; padding: 2px 7px; border-radius: 999px; background: #eef1f6; color: var(--navy); margin: 1px 3px 1px 0; white-space: nowrap; }
+.flag.bonus { background: var(--gold-soft); color: #6b4e00; } .flag.night, .flag.weekend { background: #e8eefc; } .flag.perdiem { background: #eaf6ee; color: #1b5e20; } .flag.now { background: #fdecea; color: #8e1b1b; }
+.sig { font-size: .82rem; color: var(--muted); }
+.sig li { margin: 2px 0; }
+ul.plain { list-style: none; margin: 0; padding: 0; }
+ul.talk li { padding: 8px 0 8px 26px; position: relative; border-bottom: 1px solid var(--line); }
+ul.talk li::before { content: "→"; position: absolute; left: 4px; color: var(--gold); font-weight: 700; }
+ul.talk li:last-child { border-bottom: none; }
+
+/* Lead list on the overview */
+.lead { display: grid; grid-template-columns: 30px 1fr auto; gap: 12px; align-items: start; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.lead:last-child { border-bottom: none; }
+.lead .who { min-width: 0; }
+.lead .who a { font-weight: 700; }
+.lead .who small { display: block; color: var(--muted); font-size: .82rem; }
+.lead .num { text-align: right; white-space: nowrap; }
+.lead .num .n { font-weight: 700; color: var(--navy); font-variant-numeric: tabular-nums; }
+
+/* Tables */
+table.data td .flag { margin-bottom: 0; }
+table.data td.wrap { white-space: normal; min-width: 180px; }
+table.data td.nowrap { white-space: nowrap; }
+table.data .muted { color: var(--muted); }
+.table-toggle { font-size: .8rem; color: var(--muted); background: none; border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; cursor: pointer; float: right; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.note { font-size: .82rem; color: var(--muted); margin-top: 10px; }
+.kv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.kv-grid .stat { border-top-color: var(--navy-3); }
+.score-parts .hbar { grid-template-columns: 150px 1fr 90px; }
+.method table.data td { white-space: normal; }
+.step { display: grid; grid-template-columns: 36px 1fr; gap: 12px; margin: 10px 0; }
+.step b.n { width: 32px; height: 32px; border-radius: 50%; background: var(--gold); color: var(--navy); display: inline-flex; align-items: center; justify-content: center; font-weight: 800; }
+pre { background: #0b2545; color: #e9eef6; padding: 12px 14px; border-radius: 10px; overflow-x: auto; font-size: .84rem; }
+.trend { display: flex; gap: 14px; align-items: flex-end; height: 120px; border-left: 1px solid var(--axis); border-bottom: 1px solid var(--axis); padding: 0 10px; }
+.trend .col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; width: 60px; }
+.trend .col span { display: block; width: 22px; background: var(--seq); border-radius: 4px 4px 0 0; }
+.trend .col small { color: var(--muted); font-size: .72rem; margin-top: 4px; white-space: nowrap; }
+
+/* Polish */
+.card .row.between > div:first-child { flex: 1 1 320px; }
+.card .row.between .sub { margin-bottom: 6px; }
+table.data td.sigs { min-width: 280px; }
+.range { min-width: 120px; }
