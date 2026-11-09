@@ -9,7 +9,7 @@ uploads files whose contents changed.
     python deploy_netlify.py --site my-referral-directory          # creates the site if it does not exist
     python deploy_netlify.py --site my-referral-directory --dir .  # publish directory (default: .)
 
-Published files: index.html, style.css, app.js, _headers, netlify.toml and everything under data/.
+Published files: index.html, style.css, app.js, _headers, netlify.toml and everything under data/ and jobs/.
 """
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ import urllib.request
 
 API = "https://api.netlify.com/api/v1"
 INCLUDE_TOP = {"index.html", "style.css", "app.js", "_headers", "netlify.toml", "404.html", "robots.txt", "favicon.ico"}
-INCLUDE_DIRS = {"data"}
+INCLUDE_DIRS = {"data", "jobs"}
 
 
 def token() -> str:

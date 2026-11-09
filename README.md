@@ -12,6 +12,7 @@ cleans it and writes compressed JSON per state into `/data`. No server, no datab
 index.html   style.css   app.js        the site (vanilla JS, no dependencies)
 build.py                               downloads + joins public data, writes /data
 data/                                  output of build.py (a demo build is committed)
+jobs/  jobs_build.py                   Hiring Demand Radar: Indeed postings as staffing leads (see below)
 netlify.toml  _headers  deploy_netlify.py  .github/workflows/pages.yml   deployment
 ```
 
@@ -53,6 +54,50 @@ Files written to `data/` (all `.json.gz` files are gzip; `app.js` decompresses t
 | `flows/{ST}.json.gz` | all source → destination pairs whose source is in the state |
 | `search/facilities.json.gz` | national facility search index |
 | `trending.json` | national top lists |
+
+## Hiring Demand Radar (`jobs/`)
+
+A second static app in the same repo, at `/jobs/`, that reads **Indeed job postings as demand signals**: which
+nursing homes, senior living communities, home health agencies, hospices and hospitals are hiring, for which roles,
+how urgently (sign-on bonuses, nights, weekends, per diem, months-old postings) and at what pay. Postings are grouped
+by employer and market, every employer is scored 0–100 as a staffing lead (tier A/B/C), competitor agencies are
+flagged, and advertised pay is benchmarked by role and state. It links back to this directory's facility pages.
+
+```
+jobs/index.html  jobs/app.js  jobs/style.css   the dashboard (vanilla JS; shares ../style.css)
+jobs_build.py                                  parses snapshots, scores employers, writes jobs/data/*.json
+jobs/queries.json                              the standing query plan (role x market) to re-run on every pull
+jobs/overrides.json                            pin an employer's setting / chain / agency flag when rules get it wrong
+jobs/in/<YYYY-MM-DD>/*.md                      raw Indeed connector results, one file per query, pasted verbatim
+jobs/data/                                     build output (committed; small plain JSON)
+```
+
+| Route | What it shows |
+|---|---|
+| `jobs/#/` | KPIs, "call first" lead list, demand by role / setting / state, urgency signals, national pay, trend |
+| `jobs/#/employers` | Lead list: tier, score, setting, locations, open postings, role mix, signals; filters and CSV export |
+| `jobs/#/e/{employer}` | One employer: talking points, signals, score breakdown, pay vs market, every posting, Indeed and CMS links |
+| `jobs/#/jobs` | Every posting, normalized (role family, setting, hourly pay, urgency flags, age), filters and CSV |
+| `jobs/#/markets`, `jobs/#/markets/NY` | Demand by state and metro; per-state role mix, top employers, pay vs national |
+| `jobs/#/pay` | Hourly p25 / median / p75 by role for a market, and by state for a role |
+| `jobs/#/about` | Method: normalization rules, the score formula, limits, how to refresh |
+
+**Refresh (weekly suggested).** In a Claude session with the Indeed connector, run each search in
+`jobs/queries.json` (`python jobs_build.py --print-queries` lists them), save every result verbatim as
+`jobs/in/<date>/<slug>.md` with `search:` and `location:` header lines (empty searches go in `_queries.log`), then:
+
+```bash
+python jobs_build.py        # writes jobs/data/, reports coverage against the plan
+```
+
+The exact prompt for a weekly scheduled task is in `jobs/REFRESH_PROMPT.md`; the task needs the Indeed connector
+attached when it is created. With two or more pulls the build tracks first-seen / last-seen per posting, marks postings closed when their search
+was re-run and they did not come back, and fills the trend card. Any CSV with `title, company, location, posted,
+job_type, compensation, url` columns can be dropped into a snapshot folder as well. The Indeed connector returns at
+most 10 postings per search, so the board is a sample of demand; coverage grows with the query plan.
+
+`jobs/` deploys with the rest of the site (GitHub Pages workflow and `deploy_netlify.py` include it). It lives outside
+`data/`, so the Pages workflow's data-branch swap does not touch it.
 
 ## Data sources (all free and public)
 

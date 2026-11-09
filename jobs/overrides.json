@@ -1,0 +1,33 @@
+{
+  "note": "Pin how an employer is classified when the keyword rules get it wrong. Keys are matched case-insensitively against the employer name (employers) or the start of the name (prefixes). setting: SNF | AL | HH | HOS | HOSP | AGENCY | OTHER. agency: true marks a competitor staffing firm. chain groups facilities under one operator.",
+  "employers": {
+    "Centers Health Care": {"setting": "SNF", "chain": "Centers Health Care"},
+    "Complete Care Management": {"setting": "SNF", "chain": "Complete Care"},
+    "Hudson View Network": {"setting": "SNF"},
+    "Aviata Health Group": {"setting": "SNF", "chain": "Aviata Health Group"},
+    "Vivo Healthcare West Orange": {"setting": "SNF", "chain": "Vivo Healthcare"},
+    "Palm Garden Healthcare": {"setting": "SNF", "chain": "Palm Garden"},
+    "AbleHearts": {"setting": "SNF"},
+    "The Arbor Company": {"setting": "AL", "chain": "The Arbor Company"},
+    "Elara Caring": {"setting": "HH", "chain": "Elara Caring"},
+    "Royal Care": {"setting": "HH"},
+    "RealChoice Care": {"setting": "HH"},
+    "Labranjor Health Care LLC": {"setting": "HH"},
+    "White Glove Community Care": {"setting": "HH"},
+    "Adult Day Health Care West Covina": {"setting": "OTHER"},
+    "AMFM Healthcare": {"setting": "OTHER"},
+    "AHRC Nassau": {"setting": "OTHER"},
+    "Drip Gym": {"setting": "OTHER"},
+    "Lincoln Tech": {"setting": "OTHER"},
+    "Towne Nursing": {"agency": true},
+    "Catholic Health - Nursing Homes": {"setting": "SNF", "chain": "Catholic Health"}
+  },
+  "prefixes": {
+    "excelcare": {"setting": "SNF", "chain": "Excelcare"},
+    "autumn lake healthcare": {"setting": "SNF", "chain": "Autumn Lake Healthcare"},
+    "the terrace of": {"setting": "SNF", "chain": "The Terrace"},
+    "workmen s circle": {"setting": "SNF", "chain": "Workmen's Circle"},
+    "benchmark senior living": {"setting": "AL", "chain": "Benchmark Senior Living"},
+    "alameda care center": {"setting": "SNF", "chain": "Alameda Care Center"}
+  }
+}
