@@ -40,3 +40,6 @@ jobs:
           path: .
       - id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          # The artifact carries the ~800 MB national dataset; Pages can take longer than the 10-minute default to sync it.
+          timeout: 1800000
