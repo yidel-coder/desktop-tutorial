@@ -12,7 +12,9 @@ Read README.md section "Hiring Demand Radar" if you need context. Do exactly thi
 1. Pick the working branch. If jobs_build.py exists on origin/main, use main. Otherwise use
    claude/trusting-mendel-dxtoao. Check it out and pull the latest.
 
-2. Run the standing query plan. Read jobs/queries.json. For every entry, call the Indeed connector's search_jobs tool
+2. Run the standing query plan. Read jobs/queries.json. The plan is large (hundreds of searches), so split it into
+   batches of about 20 and hand each batch to a parallel worker agent that has the Indeed connector; check that every
+   batch finished before building. For every entry, call the Indeed connector's search_jobs tool
    with country_code "US", the given search, location and job_type (when present). Save each tool result verbatim
    (the markdown it returns) to jobs/in/<today as YYYY-MM-DD>/<slug>.md, where slug is a short lowercase filename like
    rn-nursing-home_new-york-ny.md, with header lines at the top exactly like the existing files under jobs/in/:
