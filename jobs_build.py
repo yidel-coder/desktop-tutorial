@@ -732,6 +732,145 @@ def trends(jobs: list, snaps: list) -> list:
     return rows
 
 
+
+# --------------------------------------------------------------------------- outreach (business development)
+
+BD = {"fit": {}, "sender": {}, "pitch": {}}
+CONTACT_STATUSES = ["new", "ready", "sent", "replied", "meeting", "not_interested", "bounced", "do_not_contact"]
+
+
+def load_bd(cfg_path: str, contacts_path: str):
+    global BD
+    if cfg_path and os.path.exists(cfg_path):
+        with open(cfg_path, encoding="utf-8") as fh:
+            BD = json.load(fh)
+    contacts = {}
+    if contacts_path and os.path.exists(contacts_path):
+        with open(contacts_path, encoding="utf-8", newline="") as fh:
+            for row in csv.DictReader(fh):
+                key = employer_key(row.get("employer", ""))
+                if key and key != "unknown":
+                    contacts[key] = {k: (v or "").strip() for k, v in row.items()}
+    return contacts
+
+
+def fit_for(e: dict) -> dict:
+    f = BD.get("fit", {})
+    reasons, ok = [], True
+    if f.get("exclude_agencies", True) and e["is_agency"]:
+        return {"ok": False, "reasons": ["staffing agency (competitor)"]}
+    if f.get("exclude_confidential", True) and e.get("is_confidential"):
+        return {"ok": False, "reasons": ["confidential employer"]}
+    if f.get("settings") and e["setting"] not in f["settings"]:
+        ok = False; reasons.append(f"setting {SETTINGS.get(e['setting'], e['setting'])} not targeted")
+    if f.get("states") and not any(st in f["states"] for st in e["states"]):
+        ok = False; reasons.append("outside target states")
+    if f.get("roles_any") and not any(r in e["roles"] for r in f["roles_any"]):
+        ok = False; reasons.append("no targeted roles")
+    if f.get("tiers") and e["tier"] not in f["tiers"]:
+        ok = False; reasons.append(f"tier {e['tier']} not targeted")
+    if e["postings"] < int(f.get("min_postings", 1) or 1):
+        ok = False; reasons.append("too few postings")
+    if employer_key(e["name"]) in {employer_key(x) for x in f.get("exclude_names", [])}:
+        ok = False; reasons.append("excluded by name")
+    if ok:
+        top_role = max(e["roles"].items(), key=lambda kv: kv[1])[0]
+        reasons.append(f"{e['postings']} open posting{'s' if e['postings'] != 1 else ''}, mostly {ROLE_FAMILIES[top_role].lower()}")
+        reasons.append(f"{SETTINGS.get(e['setting'], e['setting'])}, tier {e['tier']}")
+    return {"ok": ok, "reasons": reasons}
+
+
+def _fill(template: str, vals: dict) -> str:
+    out = template
+    for k, v in vals.items():
+        out = out.replace("{" + k + "}", "" if v is None else str(v))
+    return out
+
+
+def draft_email(e: dict, contact: dict) -> dict:
+    """Plain-text subject and body built from the employer's own postings and the pitch config."""
+    p, snd = BD.get("pitch", {}), BD.get("sender", {})
+    roles_sorted = sorted(e["roles"].items(), key=lambda kv: -kv[1])
+    top_role, top_n = roles_sorted[0]
+    n = e["postings"]
+    first = (contact or {}).get("contact_name", "").split(" ")[0] if contact and contact.get("contact_name") else "there"
+    roles_clause = ""
+    if n > 1:
+        parts = [f"{c} {ROLE_FAMILIES[r].lower()}" for r, c in roles_sorted[:2]]
+        roles_clause = ", including " + " and ".join(parts)
+    age_clause = f"; the oldest has been up for {e['oldest_age']} days" if e.get("oldest_age") and e["oldest_age"] >= 30 else ""
+    pay_role = next((pn["role"] for pn in e.get("pay", []) if pn["diff_pct"] <= -5), None)
+    vals = {
+        "facility": e["name"], "chain": e["chain"], "n_open": n, "s": "" if n == 1 else "s",
+        "top_role": ROLE_FAMILIES[top_role], "top_role_lower": ROLE_FAMILIES[top_role].lower(), "top_role_n": top_n,
+        "roles_clause": roles_clause, "age_clause": age_clause, "oldest_age": e.get("oldest_age"),
+        "pay_role_lower": ROLE_FAMILIES[pay_role].lower() if pay_role else "",
+        "first_name": first, "city": e["cities"][0] if e["cities"] else "", "state": e["states"][0] if e["states"] else "",
+        "company": snd.get("company", ""), "sender_name": snd.get("name", ""), "sender_title": snd.get("title", ""),
+        "phone": snd.get("phone", ""), "website": snd.get("website", ""), "address": snd.get("address", ""),
+        "calendar_link": snd.get("calendar_link", ""),
+    }
+    lines = []
+    ul = p.get("urgency_lines", {})
+    if "night" in e["flags"] and ul.get("night"): lines.append(ul["night"])
+    elif "weekend" in e["flags"] and ul.get("weekend"): lines.append(ul["weekend"])
+    if "bonus" in e["flags"] and ul.get("bonus"): lines.append(ul["bonus"])
+    elif "perdiem" in e["flags"] and ul.get("perdiem"): lines.append(ul["perdiem"])
+    if pay_role and ul.get("below_market"): lines.append(ul["below_market"])
+    if not lines and e.get("oldest_age") and e["oldest_age"] >= 60 and ul.get("old") and not age_clause: lines.append(ul["old"])
+    urgency = " ".join(_fill(x, vals) for x in lines[:2])
+    paragraphs = [
+        _fill(p.get("greeting", "Hi {first_name},"), vals),
+        (_fill(p.get("intro", ""), vals) + (" " + urgency if urgency else "")).strip(),
+        _fill(p.get("what_we_do", ""), vals),
+        _fill(p.get("ask", ""), vals) + (f" You can also pick a time here: {vals['calendar_link']}" if vals["calendar_link"] else ""),
+        _fill(p.get("signoff", "Best regards,"), vals) + "\n" + "\n".join(x for x in [vals["sender_name"], (vals["sender_title"] + ", " if vals["sender_title"] else "") + vals["company"], " · ".join(x for x in [vals["phone"], vals["website"]] if x)] if x),
+        _fill(p.get("footer", ""), vals),
+    ]
+    body = "\n\n".join(x for x in paragraphs if x.strip())
+    subject = _fill(p.get("subject", "{n_open} open roles at {facility}"), vals)
+    return {"subject": subject, "body": body}
+
+
+def outreach_rows(emps: list, contacts: dict, asof: str) -> list:
+    rows = []
+    for e in emps:
+        fit = fit_for(e)
+        c = contacts.get(e["key"])
+        e["fit"] = fit
+        e["contact"] = c or None
+        if not fit["ok"]:
+            continue
+        email = draft_email(e, c)
+        status = (c or {}).get("status") or ("ready" if (c or {}).get("email") else "new")
+        if status not in CONTACT_STATUSES:
+            status = "new"
+        e["outreach"] = {"status": status, "subject": email["subject"], "body": email["body"]}
+        rows.append({"key": e["key"], "name": e["name"], "chain": e["chain"], "tier": e["tier"], "score": e["score"], "setting": e["setting"],
+                     "states": e["states"], "cities": e["cities"], "postings": e["postings"], "roles": e["roles"], "flags": e["flags"],
+                     "oldest_age": e["oldest_age"], "fit_reasons": fit["reasons"], "status": status,
+                     "contact": c or {}, "subject": email["subject"], "body": email["body"], "indeed": f"https://www.indeed.com/jobs?q=" + urllib_quote('company:"' + e["name"] + '"')})
+    return rows
+
+
+def urllib_quote(s: str) -> str:
+    import urllib.parse
+    return urllib.parse.quote(s)
+
+
+def write_outreach_csv(path: str, rows: list):
+    cols = ["status", "tier", "score", "employer", "chain", "setting", "states", "cities", "open_postings", "roles", "signals", "oldest_days",
+            "contact_name", "contact_title", "email", "phone", "website", "source", "subject", "body", "indeed_search"]
+    with open(path, "w", encoding="utf-8", newline="") as fh:
+        w = csv.writer(fh); w.writerow(cols)
+        for r in rows:
+            c = r["contact"]
+            w.writerow([r["status"], r["tier"], r["score"], r["name"], r["chain"], SETTINGS.get(r["setting"], r["setting"]), "; ".join(r["states"]), "; ".join(r["cities"]),
+                        r["postings"], "; ".join(f"{ROLE_FAMILIES[k]}: {v}" for k, v in r["roles"].items()), "; ".join(URGENCY_LABEL[f] for f in r["flags"]), r["oldest_age"],
+                        c.get("contact_name", ""), c.get("contact_title", ""), c.get("email", ""), c.get("phone", ""), c.get("website", ""), c.get("source", ""),
+                        r["subject"], r["body"], r["indeed"]])
+
+
 # --------------------------------------------------------------------------- main
 
 def main():
@@ -741,6 +880,8 @@ def main():
     ap.add_argument("--queries", default="jobs/queries.json", help="standing query plan")
     ap.add_argument("--cms-index", default="data/search/facilities.json.gz", help="referral directory facility index for CMS links")
     ap.add_argument("--overrides", default="jobs/overrides.json", help="employer setting/chain/agency overrides")
+    ap.add_argument("--bd-config", default="jobs/bd_config.json", help="outreach fit rules, sender and pitch")
+    ap.add_argument("--contacts", default="jobs/contacts.csv", help="employer contacts sheet")
     ap.add_argument("--print-queries", action="store_true", help="print the query plan and exit")
     args = ap.parse_args()
 
@@ -766,6 +907,8 @@ def main():
     emps = employers(jobs, bench, asof, cms_index)
     mk = markets(jobs, emps)
     tr = trends(jobs, snaps)
+    contacts = load_bd(args.bd_config, args.contacts)
+    outreach = outreach_rows(emps, contacts, snaps[-1])
 
     live = [j for j in jobs if j["status"] != "closed"]
     facility_emps = [e for e in emps if not e["is_agency"]]
@@ -783,7 +926,10 @@ def main():
             "with_pay": sum(1 for j in live if j["pay"]["hourly_mid"]),
             "urgent": sum(1 for j in live if j["flags"]), "states": len(mk["states"]),
             "cms_matched": sum(1 for e in emps if e.get("cms")),
+            "targets": len(outreach), "targets_with_email": sum(1 for r in outreach if r["contact"].get("email")),
+            "targets_contacted": sum(1 for r in outreach if r["status"] in ("sent", "replied", "meeting")),
         },
+        "bd": {"fit": BD.get("fit", {}), "sender": {k: v for k, v in BD.get("sender", {}).items() if k != "address"}, "statuses": CONTACT_STATUSES},
         "roles": ROLE_FAMILIES, "role_order": ROLE_ORDER, "settings": SETTINGS, "flags": URGENCY_LABEL, "states": STATES,
         "coverage": {"queries_run": len(ran), "queries_planned": len(plan), "planned_not_run": sorted(f"{a} @ {b}" for a, b in plan_keys - ran),
                      "run_not_planned": sorted(f"{a} @ {b}" for a, b in ran - plan_keys)},
@@ -805,6 +951,11 @@ def main():
     dump("markets.json", mk)
     dump("benchmarks.json", bench)
     dump("trends.json", {"rows": tr})
+    dump("outreach.json", {"rows": outreach})
+    os.makedirs("jobs/bd", exist_ok=True)
+    csv_path = os.path.join("jobs/bd", f"outreach_{snaps[-1]}.csv")
+    write_outreach_csv(csv_path, outreach)
+    print(f"  wrote {csv_path} ({len(outreach)} targets, {meta['counts']['targets_with_email']} with an email address)")
     print(f"Done. {meta['counts']['postings']} live postings, {meta['counts']['employers']} facility employers "
           f"({meta['counts']['tier_a']} tier A, {meta['counts']['tier_b']} tier B), {meta['counts']['agencies']} agencies, "
           f"{meta['counts']['cms_matched']} CMS matches.")

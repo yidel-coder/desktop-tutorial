@@ -68,6 +68,8 @@ jobs/index.html  jobs/app.js  jobs/style.css   the dashboard (vanilla JS; shares
 jobs_build.py                                  parses snapshots, scores employers, writes jobs/data/*.json
 jobs/queries.json                              the standing query plan (role x market) to re-run on every pull
 jobs/overrides.json                            pin an employer's setting / chain / agency flag when rules get it wrong
+jobs/bd_config.json  jobs/contacts.csv          outreach: fit rules, sender, pitch; employer contacts and status
+bd_enrich.py                                   fill contact emails from Hunter.io / Apollo.io
 jobs/in/<YYYY-MM-DD>/*.md                      raw Indeed connector results, one file per query, pasted verbatim
 jobs/data/                                     build output (committed; small plain JSON)
 ```
@@ -80,6 +82,7 @@ jobs/data/                                     build output (committed; small pl
 | `jobs/#/jobs` | Every posting, normalized (role family, setting, hourly pay, urgency flags, age), filters and CSV |
 | `jobs/#/markets`, `jobs/#/markets/NY` | Demand by state and metro; per-state role mix, top employers, pay vs national |
 | `jobs/#/pay` | Hourly p25 / median / p75 by role for a market, and by state for a role |
+| `jobs/#/outreach` | Target employers with contact, status and a draft RPO email built from their postings; CSV export |
 | `jobs/#/about` | Method: normalization rules, the score formula, limits, how to refresh |
 
 **Refresh (weekly suggested).** In a Claude session with the Indeed connector, run each search in
@@ -95,6 +98,21 @@ attached when it is created. With two or more pulls the build tracks first-seen 
 was re-run and they did not come back, and fills the trend card. Any CSV with `title, company, location, posted,
 job_type, compensation, url` columns can be dropped into a snapshot folder as well. The Indeed connector returns at
 most 10 postings per search, so the board is a sample of demand; coverage grows with the query plan.
+
+### Outreach (business development)
+
+The `jobs/#/outreach` page turns the lead list into a working list. `jobs/bd_config.json` holds the fit rules
+(care settings, roles, tiers, states, exclusions), the sender identity and the pitch wording; `jobs/contacts.csv`
+holds one row per employer with the administrator or HR contact, phone, website, source and status. On every build
+each fitting employer gets a draft email written from its own postings (open roles, shifts, bonus, posting age, pay
+versus market), the page shows contact and status, the **Email** button opens the draft in your mail client, and
+`jobs/bd/outreach_<date>.csv` carries everything for a mail-merge or sequencing tool.
+
+Finding contacts: web search reliably gives the facility website, main phone and often the administrator's name,
+but administrator email addresses are rarely published. `bd_enrich.py` fills them in from an email-finder service
+(Hunter.io or Apollo.io, API key in `HUNTER_API_KEY` / `APOLLO_API_KEY`) using the domain and name already on the
+row, recording the confidence score as the source. Drafts include a physical-address line and an opt-out sentence;
+replace the bracketed sender placeholders in `bd_config.json` before sending.
 
 `jobs/` deploys with the rest of the site (GitHub Pages workflow and `deploy_netlify.py` include it). It lives outside
 `data/`, so the Pages workflow's data-branch swap does not touch it.
